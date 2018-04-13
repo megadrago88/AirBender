@@ -30,8 +30,7 @@ SOFTWARE.
  *
  * \brief   Defines an alias representing an L2CAP signalling command code.
  */
-typedef enum _L2CAP_SIGNALLING_COMMAND_CODE
-{
+typedef enum _L2CAP_SIGNALLING_COMMAND_CODE {
     L2CAP_Reserved = 0x00,
     L2CAP_Command_Reject = 0x01,
 
@@ -83,8 +82,7 @@ typedef enum _L2CAP_SIGNALLING_COMMAND_CODE
  *
  * \brief   Defines an alias representing an L2CAP configuration response result.
  */
-typedef enum _L2CAP_CONFIGURATION_RESPONSE_RESULT
-{
+typedef enum _L2CAP_CONFIGURATION_RESPONSE_RESULT {
     /// <summary>
     ///     Success
     /// </summary>
@@ -112,8 +110,7 @@ typedef enum _L2CAP_CONFIGURATION_RESPONSE_RESULT
  *
  * \brief   Defines an alias representing an L2CAP connection response result.
  */
-typedef enum _L2CAP_CONNECTION_RESPONSE_RESULT
-{
+typedef enum _L2CAP_CONNECTION_RESPONSE_RESULT {
     /// <summary>
     ///     Connection successful.
     /// </summary>
@@ -146,8 +143,7 @@ typedef enum _L2CAP_CONNECTION_RESPONSE_RESULT
  *
  * \brief   Defines an alias representing an L2CAP connection response status.
  */
-typedef enum _L2CAP_CONNECTION_RESPONSE_STATUS
-{
+typedef enum _L2CAP_CONNECTION_RESPONSE_STATUS {
     /// <summary>
     ///     No further information available.
     /// </summary>
@@ -168,8 +164,7 @@ typedef enum _L2CAP_CONNECTION_RESPONSE_STATUS
  *
  * \brief   Defines an alias representing an L2CAP Protocol/Service Multiplexer.
  */
-typedef enum _L2CAP_PSM
-{
+typedef enum _L2CAP_PSM {
     L2CAP_PSM_HID_Service = 0x01,
     L2CAP_PSM_HID_Command = 0x11,
     L2CAP_PSM_HID_Interrupt = 0x13
@@ -181,8 +176,7 @@ typedef enum _L2CAP_PSM
  *
  * \brief   Defines an alias representing an L2CAP Channel Identifier.
  */
-typedef struct _L2CAP_CID
-{
+typedef struct _L2CAP_CID {
     BYTE Lsb;
     BYTE Msb;
 
@@ -193,8 +187,7 @@ typedef struct _L2CAP_CID
  *
  * \brief   Defines an alias representing data attached to COMMAND REJECT.
  */
-typedef struct _L2CAP_SIGNALLING_COMMAND_REJECT
-{
+typedef struct _L2CAP_SIGNALLING_COMMAND_REJECT {
     BYTE Code;
     BYTE Identifier;
     USHORT Length;
@@ -207,8 +200,7 @@ typedef struct _L2CAP_SIGNALLING_COMMAND_REJECT
  *
  * \brief   Defines an alias representing data attached to CONNECTION REQUEST.
  */
-typedef struct _L2CAP_SIGNALLING_CONNECTION_REQUEST
-{
+typedef struct _L2CAP_SIGNALLING_CONNECTION_REQUEST {
     BYTE Code;
     BYTE Identifier;
     USHORT Length;
@@ -222,8 +214,7 @@ typedef struct _L2CAP_SIGNALLING_CONNECTION_REQUEST
  *
  * \brief   Defines an alias representing data attached to CONNECTION RESPONSE.
  */
-typedef struct _L2CAP_SIGNALLING_CONNECTION_RESPONSE
-{
+typedef struct _L2CAP_SIGNALLING_CONNECTION_RESPONSE {
     BYTE Code;
     BYTE Identifier;
     USHORT Length;
@@ -239,8 +230,7 @@ typedef struct _L2CAP_SIGNALLING_CONNECTION_RESPONSE
  *
  * \brief   Defines an alias representing data attached to CONFIGURATION REQUEST.
  */
-typedef struct _L2CAP_SIGNALLING_CONFIGURATION_REQUEST
-{
+typedef struct _L2CAP_SIGNALLING_CONFIGURATION_REQUEST {
     BYTE Code;
     BYTE Identifier;
     USHORT Length;
@@ -255,8 +245,7 @@ typedef struct _L2CAP_SIGNALLING_CONFIGURATION_REQUEST
  *
  * \brief   Defines an alias representing data attached to CONFIGURATION RESPONSE.
  */
-typedef struct _L2CAP_SIGNALLING_CONFIGURATION_RESPONSE
-{
+typedef struct _L2CAP_SIGNALLING_CONFIGURATION_RESPONSE {
     BYTE Code;
     BYTE Identifier;
     USHORT Length;
@@ -272,8 +261,7 @@ typedef struct _L2CAP_SIGNALLING_CONFIGURATION_RESPONSE
  *
  * \brief   Defines an alias representing data attached to DISCONNECTION REQUEST.
  */
-typedef struct _L2CAP_SIGNALLING_DISCONNECTION_REQUEST
-{
+typedef struct _L2CAP_SIGNALLING_DISCONNECTION_REQUEST {
     BYTE Code;
     BYTE Identifier;
     USHORT Length;
@@ -287,8 +275,7 @@ typedef struct _L2CAP_SIGNALLING_DISCONNECTION_REQUEST
  *
  * \brief   Defines an alias representing data attached to DISCONNECTION RESPONSE.
  */
-typedef struct _L2CAP_SIGNALLING_DISCONNECTION_RESPONSE
-{
+typedef struct _L2CAP_SIGNALLING_DISCONNECTION_RESPONSE {
     BYTE Code;
     BYTE Identifier;
     USHORT Length;
@@ -309,49 +296,47 @@ typedef struct _L2CAP_SIGNALLING_DISCONNECTION_RESPONSE
  */
 #define L2CAP_IS_CONTROL_CHANNEL(_buf_)                     ((BOOLEAN)_buf_[6] == 0x01 && _buf_[7] == 0x00)
 
-/**
- * \def L2CAP_IS_HID_INPUT_REPORT(_buf_) ((BOOLEAN)_buf_[8] == 0xA1 && _buf_[9] == 0x01)
- *
- * \brief   A macro that identifies a HID input report.
- *
- * \author  Benjamin "Nefarius" Höglinger
- * \date    18.09.2017
- *
- * \param   _buf_   The buffer.
- */
+ /**
+  * \def L2CAP_IS_HID_INPUT_REPORT(_buf_) ((BOOLEAN)_buf_[8] == 0xA1 && _buf_[9] == 0x01)
+  *
+  * \brief   A macro that identifies a HID input report.
+  *
+  * \author  Benjamin "Nefarius" Höglinger
+  * \date    18.09.2017
+  *
+  * \param   _buf_   The buffer.
+  */
 #define L2CAP_IS_HID_INPUT_REPORT(_buf_)                    ((BOOLEAN)_buf_[8] == 0xA1 && _buf_[9] == 0x01)
 
-/**
- * \def L2CAP_GET_SIGNALLING_COMMAND_CODE(_buf_) ((L2CAP_SIGNALLING_COMMAND_CODE)_buf_[8])
- *
- * \brief   A macro that validates the signalling command code.
- *
- * \author  Benjamin "Nefarius" Höglinger
- * \date    18.09.2017
- *
- * \param   _buf_   The buffer.
- */
+  /**
+   * \def L2CAP_GET_SIGNALLING_COMMAND_CODE(_buf_) ((L2CAP_SIGNALLING_COMMAND_CODE)_buf_[8])
+   *
+   * \brief   A macro that validates the signalling command code.
+   *
+   * \author  Benjamin "Nefarius" Höglinger
+   * \date    18.09.2017
+   *
+   * \param   _buf_   The buffer.
+   */
 #define L2CAP_GET_SIGNALLING_COMMAND_CODE(_buf_)            ((L2CAP_SIGNALLING_COMMAND_CODE)_buf_[8])
 
-/**
- * \fn  BOOLEAN FORCEINLINE L2CAP_IS_SIGNALLING_COMMAND_CODE( PUCHAR Buffer )
- *
- * \brief   Checks if the supplied buffer represents a valid L2CAP signalling command code.
- *
- * \author  Benjamin "Nefarius" Höglinger
- * \date    18.09.2017
- *
- * \param   Buffer  The buffer.
- *
- * \return  TRUE if valid, FALSE otherwise.
- */
+   /**
+    * \fn  BOOLEAN FORCEINLINE L2CAP_IS_SIGNALLING_COMMAND_CODE( PUCHAR Buffer )
+    *
+    * \brief   Checks if the supplied buffer represents a valid L2CAP signalling command code.
+    *
+    * \author  Benjamin "Nefarius" Höglinger
+    * \date    18.09.2017
+    *
+    * \param   Buffer  The buffer.
+    *
+    * \return  TRUE if valid, FALSE otherwise.
+    */
 BOOLEAN FORCEINLINE L2CAP_IS_SIGNALLING_COMMAND_CODE(
     PUCHAR Buffer
-)
-{
-    for (UCHAR i = L2CAP_Command_Reject; i <= L2CAP_Information_Response; i++)
-    {
-        if (i == Buffer[8]) return TRUE;
+) {
+    for (UCHAR i = L2CAP_Command_Reject; i<=L2CAP_Information_Response; i++) {
+        if (i==Buffer[8]) return TRUE;
     }
 
     return FALSE;
@@ -371,18 +356,16 @@ BOOLEAN FORCEINLINE L2CAP_IS_SIGNALLING_COMMAND_CODE(
  */
 VOID FORCEINLINE L2CAP_GET_NEW_CID(
     PL2CAP_CID CID
-)
-{
+) {
     static USHORT GlobalCID = 0x40;
 
     // 0x0040-0xFFFF = Dynamically allocated
-    if (GlobalCID >= 0xFFFF)
-    {
+    if (GlobalCID>=0xFFFF) {
         GlobalCID = 0x40;
     }
 
-    CID->Lsb = (BYTE)((GlobalCID >> 0) & 0xFF);
-    CID->Msb = (BYTE)((GlobalCID >> 8) & 0xFF);
+    CID->Lsb = (BYTE) ((GlobalCID>>0)&0xFF);
+    CID->Msb = (BYTE) ((GlobalCID>>8)&0xFF);
 
     GlobalCID++;
 }
@@ -408,36 +391,34 @@ VOID FORCEINLINE L2CAP_SET_CONNECTION_TYPE(
     _In_ L2CAP_PSM Type,
     _In_ L2CAP_CID SourceChannelId,
     _Out_ PL2CAP_CID DestinationChannelId
-)
-{
-    switch (Type)
-    {
-    case L2CAP_PSM_HID_Command:
-        L2CAP_GET_NEW_CID(DestinationChannelId);
+) {
+    switch (Type) {
+        case L2CAP_PSM_HID_Command:
+            L2CAP_GET_NEW_CID(DestinationChannelId);
 
-        RtlCopyMemory(&Device->L2CAP_CommandHandle.Source, &SourceChannelId, sizeof(BTH_HANDLE));
-        RtlCopyMemory(&Device->L2CAP_CommandHandle.Destination, DestinationChannelId, sizeof(BTH_HANDLE));
+            RtlCopyMemory(&Device->L2CAP_CommandHandle.Source, &SourceChannelId, sizeof(BTH_HANDLE));
+            RtlCopyMemory(&Device->L2CAP_CommandHandle.Destination, DestinationChannelId, sizeof(BTH_HANDLE));
 
-        break;
-    case L2CAP_PSM_HID_Interrupt:
-        L2CAP_GET_NEW_CID(DestinationChannelId);
+            break;
+        case L2CAP_PSM_HID_Interrupt:
+            L2CAP_GET_NEW_CID(DestinationChannelId);
 
-        RtlCopyMemory(&Device->L2CAP_InterruptHandle.Source, &SourceChannelId, sizeof(BTH_HANDLE));
-        RtlCopyMemory(&Device->L2CAP_InterruptHandle.Destination, DestinationChannelId, sizeof(BTH_HANDLE));
+            RtlCopyMemory(&Device->L2CAP_InterruptHandle.Source, &SourceChannelId, sizeof(BTH_HANDLE));
+            RtlCopyMemory(&Device->L2CAP_InterruptHandle.Destination, DestinationChannelId, sizeof(BTH_HANDLE));
 
-        Device->CanStartService = TRUE;
+            Device->CanStartService = TRUE;
 
-        break;
-    case L2CAP_PSM_HID_Service:
-        RtlCopyMemory(&Device->L2CAP_ServiceHandle.Source, &SourceChannelId, sizeof(BTH_HANDLE));
-        RtlCopyMemory(&Device->L2CAP_ServiceHandle.Destination, DestinationChannelId, sizeof(BTH_HANDLE));
+            break;
+        case L2CAP_PSM_HID_Service:
+            RtlCopyMemory(&Device->L2CAP_ServiceHandle.Source, &SourceChannelId, sizeof(BTH_HANDLE));
+            RtlCopyMemory(&Device->L2CAP_ServiceHandle.Destination, DestinationChannelId, sizeof(BTH_HANDLE));
 
-        Device->CanStartService = FALSE;
-        Device->IsServiceStarted = TRUE;
+            Device->CanStartService = FALSE;
+            Device->IsServiceStarted = TRUE;
 
-        break;
-    default:
-        break;
+            break;
+        default:
+            break;
     }
 }
 
@@ -459,29 +440,25 @@ VOID FORCEINLINE L2CAP_DEVICE_GET_SCID(
     PBTH_DEVICE Device,
     L2CAP_CID DestinationChannelId,
     PL2CAP_CID SourceChannelId
-)
-{
+) {
     if (RtlCompareMemory(
         &Device->L2CAP_CommandHandle.Destination,
         &DestinationChannelId,
-        sizeof(BTH_HANDLE)) == sizeof(BTH_HANDLE))
-    {
+        sizeof(BTH_HANDLE))==sizeof(BTH_HANDLE)) {
         RtlCopyMemory(SourceChannelId, &Device->L2CAP_CommandHandle.Source, sizeof(BTH_HANDLE));
     }
 
     if (RtlCompareMemory(
         &Device->L2CAP_InterruptHandle.Destination,
         &DestinationChannelId,
-        sizeof(BTH_HANDLE)) == sizeof(BTH_HANDLE))
-    {
+        sizeof(BTH_HANDLE))==sizeof(BTH_HANDLE)) {
         RtlCopyMemory(SourceChannelId, &Device->L2CAP_InterruptHandle.Source, sizeof(BTH_HANDLE));
     }
 
     if (RtlCompareMemory(
         &Device->L2CAP_ServiceHandle.Destination,
         &DestinationChannelId,
-        sizeof(BTH_HANDLE)) == sizeof(BTH_HANDLE))
-    {
+        sizeof(BTH_HANDLE))==sizeof(BTH_HANDLE)) {
         RtlCopyMemory(SourceChannelId, &Device->L2CAP_ServiceHandle.Source, sizeof(BTH_HANDLE));
     }
 }
@@ -504,19 +481,17 @@ VOID FORCEINLINE L2CAP_DEVICE_GET_SCID_FOR_TYPE(
     PBTH_DEVICE Device,
     L2CAP_PSM Type,
     PL2CAP_CID SourceChannelId
-)
-{
-    switch (Type)
-    {
-    case L2CAP_PSM_HID_Command:
-        RtlCopyMemory(SourceChannelId, &Device->L2CAP_CommandHandle.Source, sizeof(L2CAP_CID));
-        break;
-    case L2CAP_PSM_HID_Interrupt:
-        RtlCopyMemory(SourceChannelId, &Device->L2CAP_InterruptHandle.Source, sizeof(L2CAP_CID));
-        break;
-    case L2CAP_PSM_HID_Service:
-        RtlCopyMemory(SourceChannelId, &Device->L2CAP_ServiceHandle.Source, sizeof(L2CAP_CID));
-        break;
+) {
+    switch (Type) {
+        case L2CAP_PSM_HID_Command:
+            RtlCopyMemory(SourceChannelId, &Device->L2CAP_CommandHandle.Source, sizeof(L2CAP_CID));
+            break;
+        case L2CAP_PSM_HID_Interrupt:
+            RtlCopyMemory(SourceChannelId, &Device->L2CAP_InterruptHandle.Source, sizeof(L2CAP_CID));
+            break;
+        case L2CAP_PSM_HID_Service:
+            RtlCopyMemory(SourceChannelId, &Device->L2CAP_ServiceHandle.Source, sizeof(L2CAP_CID));
+            break;
     }
 }
 
@@ -538,19 +513,17 @@ VOID FORCEINLINE L2CAP_DEVICE_GET_DCID_FOR_TYPE(
     PBTH_DEVICE Device,
     L2CAP_PSM Type,
     PL2CAP_CID DestinationChannelId
-)
-{
-    switch (Type)
-    {
-    case L2CAP_PSM_HID_Command:
-        RtlCopyMemory(DestinationChannelId, &Device->L2CAP_CommandHandle.Destination, sizeof(L2CAP_CID));
-        break;
-    case L2CAP_PSM_HID_Interrupt:
-        RtlCopyMemory(DestinationChannelId, &Device->L2CAP_InterruptHandle.Destination, sizeof(L2CAP_CID));
-        break;
-    case L2CAP_PSM_HID_Service:
-        RtlCopyMemory(DestinationChannelId, &Device->L2CAP_ServiceHandle.Destination, sizeof(L2CAP_CID));
-        break;
+) {
+    switch (Type) {
+        case L2CAP_PSM_HID_Command:
+            RtlCopyMemory(DestinationChannelId, &Device->L2CAP_CommandHandle.Destination, sizeof(L2CAP_CID));
+            break;
+        case L2CAP_PSM_HID_Interrupt:
+            RtlCopyMemory(DestinationChannelId, &Device->L2CAP_InterruptHandle.Destination, sizeof(L2CAP_CID));
+            break;
+        case L2CAP_PSM_HID_Service:
+            RtlCopyMemory(DestinationChannelId, &Device->L2CAP_ServiceHandle.Destination, sizeof(L2CAP_CID));
+            break;
     }
 }
 

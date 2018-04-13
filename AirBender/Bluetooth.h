@@ -44,8 +44,7 @@ static const BYTE BD_LINK[BD_LINK_LENGTH] =
  *
  * \brief   Defines a Bluetooth client handle.
  */
-typedef struct _BTH_HANDLE
-{
+typedef struct _BTH_HANDLE {
     BYTE Lsb;
     BYTE Msb;
 
@@ -56,8 +55,7 @@ typedef struct _BTH_HANDLE
  *
  * \brief   Defines a handle pair connecting a device CID to a host CID.
  */
-typedef struct _BTH_HANDLE_PAIR
-{
+typedef struct _BTH_HANDLE_PAIR {
     BTH_HANDLE Source;
     BTH_HANDLE Destination;
 
@@ -68,8 +66,7 @@ typedef struct _BTH_HANDLE_PAIR
  *
  * \brief   Defines a Bluetooth client device connection information set.
  */
-typedef struct _BTH_DEVICE
-{
+typedef struct _BTH_DEVICE {
     //
     // MAC address identifying this device
     // 
@@ -155,8 +152,7 @@ typedef struct _BTH_DEVICE
  * \author  Benjamin "Nefarius" Höglinger
  * \date    27.03.2018
  */
-typedef struct _BTH_DEVICE_CONTEXT
-{
+typedef struct _BTH_DEVICE_CONTEXT {
     PBTH_DEVICE Device;
 
     WDFDEVICE HostDevice;
@@ -170,8 +166,7 @@ WDF_DECLARE_CONTEXT_TYPE_WITH_NAME(BTH_DEVICE_CONTEXT, BluetoothDeviceGetContext
  *
  * \brief   Defines a linked list of Bluetooth client devices.
  */
-    typedef struct _BTH_DEVICE_LIST
-{
+    typedef struct _BTH_DEVICE_LIST {
     ULONG logicalLength;
 
     PBTH_DEVICE head;
@@ -209,8 +204,7 @@ WDF_DECLARE_CONTEXT_TYPE_WITH_NAME(BTH_DEVICE_CONTEXT, BluetoothDeviceGetContext
   */
 VOID FORCEINLINE BTH_DEVICE_FREE(
     PBTH_DEVICE Device
-)
-{
+) {
     if (Device->RemoteName)
         free(Device->RemoteName);
 
@@ -232,8 +226,7 @@ VOID FORCEINLINE BTH_DEVICE_FREE(
  */
 VOID FORCEINLINE BTH_DEVICE_LIST_INIT(
     PBTH_DEVICE_LIST List
-)
-{
+) {
     List->logicalLength = 0;
     List->head = List->tail = NULL;
 }
@@ -252,12 +245,10 @@ VOID FORCEINLINE BTH_DEVICE_LIST_INIT(
 */
 VOID FORCEINLINE BTH_DEVICE_LIST_FREE(
     PBTH_DEVICE_LIST List
-)
-{
+) {
     PBTH_DEVICE node = List->head;
 
-    while (node != NULL)
-    {
+    while (node!=NULL) {
         BTH_DEVICE_FREE(node);
 
         node = node->next;
@@ -284,8 +275,7 @@ NTSTATUS FORCEINLINE BTH_DEVICE_LIST_ADD(
     PBTH_DEVICE_LIST List,
     PBD_ADDR Address,
     WDFDEVICE HostDevice
-)
-{
+) {
     NTSTATUS                status;
     WDF_IO_QUEUE_CONFIG     queueCfg;
     WDF_TIMER_CONFIG        timerCfg;
@@ -330,7 +320,7 @@ NTSTATUS FORCEINLINE BTH_DEVICE_LIST_ADD(
     status = WdfObjectAllocateContext(
         node->HidOutputReportTimer,
         &attributes,
-        (PVOID)&pBluetoothCtx
+        (PVOID) &pBluetoothCtx
     );
     if (!NT_SUCCESS(status)) {
         free(node);
@@ -340,10 +330,9 @@ NTSTATUS FORCEINLINE BTH_DEVICE_LIST_ADD(
     pBluetoothCtx->Device = node;
     pBluetoothCtx->HostDevice = HostDevice;
 
-    if (List->logicalLength == 0) {
+    if (List->logicalLength==0) {
         List->head = List->tail = node;
-    }
-    else {
+    } else {
         List->tail->next = node;
         List->tail = node;
     }
@@ -369,8 +358,7 @@ NTSTATUS FORCEINLINE BTH_DEVICE_LIST_ADD(
 BOOLEAN FORCEINLINE BTH_DEVICE_LIST_REMOVE(
     PBTH_DEVICE_LIST List,
     PBTH_HANDLE Handle
-)
-{
+) {
     BTH_DEVICE *currP, *prevP;
 
     /* For 1st node, indicate there is no previous. */
@@ -380,18 +368,13 @@ BOOLEAN FORCEINLINE BTH_DEVICE_LIST_REMOVE(
     * Visit each node, maintaining a pointer to
     * the previous node we just visited.
     */
-    for (currP = List->head; currP != NULL; prevP = currP, currP = currP->next)
-    {
-        if (*(PUSHORT)&currP->HCI_ConnectionHandle == *(PUSHORT)Handle)
-        {
+    for (currP = List->head; currP!=NULL; prevP = currP, currP = currP->next) {
+        if (*(PUSHORT) &currP->HCI_ConnectionHandle==*(PUSHORT) Handle) {
             /* Found it. */
-            if (prevP == NULL)
-            {
+            if (prevP==NULL) {
                 /* Fix beginning pointer. */
                 List->head = currP->next;
-            }
-            else
-            {
+            } else {
                 /*
                 * Fix previous node's next to
                 * skip over the removed node.
@@ -426,8 +409,7 @@ BOOLEAN FORCEINLINE BTH_DEVICE_LIST_REMOVE(
  */
 ULONG FORCEINLINE BTH_DEVICE_LIST_GET_COUNT(
     PBTH_DEVICE_LIST List
-)
-{
+) {
     return List->logicalLength;
 }
 
@@ -447,17 +429,14 @@ ULONG FORCEINLINE BTH_DEVICE_LIST_GET_COUNT(
 PBTH_DEVICE FORCEINLINE BTH_DEVICE_LIST_GET_BY_BD_ADDR(
     PBTH_DEVICE_LIST List,
     PBD_ADDR Address
-)
-{
+) {
     PBTH_DEVICE node = List->head;
 
-    while (node != NULL)
-    {
+    while (node!=NULL) {
         if (RtlCompareMemory(
             &node->ClientAddress,
             Address,
-            sizeof(BD_ADDR)) == sizeof(BD_ADDR))
-        {
+            sizeof(BD_ADDR))==sizeof(BD_ADDR)) {
             return node;
         }
 
@@ -486,8 +465,7 @@ VOID FORCEINLINE BTH_DEVICE_LIST_SET_HANDLE(
     PBTH_DEVICE_LIST List,
     PBD_ADDR Address,
     PBTH_HANDLE Handle
-)
-{
+) {
     PBTH_DEVICE node = BTH_DEVICE_LIST_GET_BY_BD_ADDR(List, Address);
 
     node->HCI_ConnectionHandle = *Handle;
@@ -509,17 +487,14 @@ VOID FORCEINLINE BTH_DEVICE_LIST_SET_HANDLE(
 PBTH_DEVICE FORCEINLINE BTH_DEVICE_LIST_GET_BY_HANDLE(
     PBTH_DEVICE_LIST List,
     PBTH_HANDLE Handle
-)
-{
+) {
     PBTH_DEVICE node = List->head;
 
-    while (node != NULL)
-    {
+    while (node!=NULL) {
         if (RtlCompareMemory(
             &node->HCI_ConnectionHandle,
             Handle,
-            sizeof(BTH_HANDLE)) == sizeof(BTH_HANDLE))
-        {
+            sizeof(BTH_HANDLE))==sizeof(BTH_HANDLE)) {
             return node;
         }
 
@@ -545,14 +520,12 @@ PBTH_DEVICE FORCEINLINE BTH_DEVICE_LIST_GET_BY_HANDLE(
 PBTH_DEVICE FORCEINLINE BTH_DEVICE_LIST_GET_BY_INDEX(
     PBTH_DEVICE_LIST List,
     ULONG Index
-)
-{
+) {
     PBTH_DEVICE node = List->head;
     ULONG i = 0;
 
-    while (node != NULL)
-    {
-        if (i++ == Index) return node;
+    while (node!=NULL) {
+        if (i++==Index) return node;
     }
 
     return NULL;

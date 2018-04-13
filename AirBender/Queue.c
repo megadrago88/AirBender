@@ -86,8 +86,7 @@ Return Value:
     return status;
 }
 
-NTSTATUS AirBenderChildQueuesInitialize(WDFDEVICE Device)
-{
+NTSTATUS AirBenderChildQueuesInitialize(WDFDEVICE Device) {
     NTSTATUS                status;
     WDF_IO_QUEUE_CONFIG     queueConfig;
     WDF_OBJECT_ATTRIBUTES   attributes;
@@ -176,343 +175,321 @@ Return Value:
     PAIRBENDER_GET_HOST_VERSION         pGetHostVersion;
     PVOID                               buffer;
 
-    // TraceEvents(TRACE_LEVEL_INFORMATION,
-    //     TRACE_QUEUE,
-    //     "%!FUNC! Queue 0x%p, Request 0x%p OutputBufferLength %d InputBufferLength %d IoControlCode 0x%X",
-    //     Queue, Request, (int)OutputBufferLength, (int)InputBufferLength, IoControlCode);
+    TraceEvents(TRACE_LEVEL_VERBOSE,
+        TRACE_QUEUE,
+        "%!FUNC! Queue 0x%p, Request 0x%p OutputBufferLength %d InputBufferLength %d IoControlCode 0x%X",
+        Queue, Request, (int) OutputBufferLength, (int) InputBufferLength, IoControlCode);
 
     pDeviceContext = DeviceGetContext(WdfIoQueueGetDevice(Queue));
 
-    switch (IoControlCode)
-    {
-#pragma region IOCTL_AIRBENDER_GET_HOST_BD_ADDR
+    switch (IoControlCode) {
+    #pragma region IOCTL_AIRBENDER_GET_HOST_BD_ADDR
 
-    case IOCTL_AIRBENDER_GET_HOST_BD_ADDR:
-
-        TraceEvents(TRACE_LEVEL_INFORMATION,
-            TRACE_QUEUE, "IOCTL_AIRBENDER_GET_HOST_BD_ADDR");
-
-        status = WdfRequestRetrieveOutputBuffer(
-            Request,
-            sizeof(AIRBENDER_GET_HOST_BD_ADDR),
-            (LPVOID)&pGetBdAddr,
-            &bufferLength);
-
-        if (NT_SUCCESS(status) && OutputBufferLength == sizeof(AIRBENDER_GET_HOST_BD_ADDR))
-        {
-            transferred = sizeof(BD_ADDR);
-            RtlCopyMemory(&pGetBdAddr->Host, &pDeviceContext->BluetoothHostAddress, transferred);
-        }
-        else
-        {
-            TraceEvents(TRACE_LEVEL_ERROR,
-                TRACE_QUEUE, "Buffer size mismatch: %d != %d",
-                (ULONG)OutputBufferLength, sizeof(AIRBENDER_GET_HOST_BD_ADDR));
-        }
-
-        break;
-
-#pragma endregion
-
-#pragma region IOCTL_AIRBENDER_HOST_RESET
-
-    case IOCTL_AIRBENDER_HOST_RESET:
-
-        TraceEvents(TRACE_LEVEL_INFORMATION,
-            TRACE_QUEUE, "IOCTL_AIRBENDER_HOST_RESET");
-
-        pDeviceContext->Started = FALSE;
-        status = HCI_Command_Reset(pDeviceContext);
-
-        BTH_DEVICE_LIST_FREE(&pDeviceContext->ClientDeviceList);
-        BTH_DEVICE_LIST_INIT(&pDeviceContext->ClientDeviceList);
-
-        break;
-
-#pragma endregion
-
-#pragma region IOCTL_AIRBENDER_GET_CLIENT_COUNT
-
-    case IOCTL_AIRBENDER_GET_CLIENT_COUNT:
-
-        // TraceEvents(TRACE_LEVEL_INFORMATION,
-        //     TRACE_QUEUE, "IOCTL_AIRBENDER_GET_CLIENT_COUNT");
-
-        status = WdfRequestRetrieveOutputBuffer(
-            Request,
-            sizeof(AIRBENDER_GET_CLIENT_COUNT),
-            (LPVOID)&pGetClientCount,
-            &bufferLength);
-
-        if (NT_SUCCESS(status) && OutputBufferLength == sizeof(AIRBENDER_GET_CLIENT_COUNT))
-        {
-            transferred = sizeof(AIRBENDER_GET_CLIENT_COUNT);
-            pGetClientCount->Count = BTH_DEVICE_LIST_GET_COUNT(&pDeviceContext->ClientDeviceList);
-        }
-        else
-        {
-            TraceEvents(TRACE_LEVEL_ERROR,
-                TRACE_QUEUE, "Buffer size mismatch: %d != %d",
-                (ULONG)OutputBufferLength, sizeof(AIRBENDER_GET_CLIENT_COUNT));
-        }
-
-        break;
-
-#pragma endregion
-
-#pragma region IOCTL_AIRBENDER_GET_CLIENT_DETAILS
-
-    case IOCTL_AIRBENDER_GET_CLIENT_DETAILS:
-
-        // TraceEvents(TRACE_LEVEL_INFORMATION,
-        //     TRACE_QUEUE, "IOCTL_AIRBENDER_GET_CLIENT_DETAILS");
-
-        status = WdfRequestRetrieveInputBuffer(
-            Request,
-            sizeof(AIRBENDER_GET_CLIENT_DETAILS),
-            (LPVOID)&pGetStateReq,
-            &bufferLength);
-
-        if (NT_SUCCESS(status) && InputBufferLength == sizeof(AIRBENDER_GET_CLIENT_DETAILS))
-        {
-            AIRBENDER_GET_CLIENT_DETAILS req = *pGetStateReq;
+        case IOCTL_AIRBENDER_GET_HOST_BD_ADDR:
 
             TraceEvents(TRACE_LEVEL_INFORMATION,
-                TRACE_QUEUE, "Requesting state for device #%d", pGetStateReq->ClientIndex);
-
-            pBthDevice = BTH_DEVICE_LIST_GET_BY_INDEX(&pDeviceContext->ClientDeviceList, pGetStateReq->ClientIndex);
-
-            if (pBthDevice == NULL)
-            {
-                TraceEvents(TRACE_LEVEL_INFORMATION,
-                    TRACE_QUEUE, "Device not found");
-
-                status = STATUS_DEVICE_DOES_NOT_EXIST;
-                break;
-            }
+                TRACE_QUEUE, "IOCTL_AIRBENDER_GET_HOST_BD_ADDR");
 
             status = WdfRequestRetrieveOutputBuffer(
                 Request,
-                sizeof(AIRBENDER_GET_CLIENT_DETAILS),
-                (LPVOID)&pGetStateReq,
+                sizeof(AIRBENDER_GET_HOST_BD_ADDR),
+                (LPVOID) &pGetBdAddr,
                 &bufferLength);
 
-            if (NT_SUCCESS(status) && OutputBufferLength == sizeof(AIRBENDER_GET_CLIENT_DETAILS))
-            {
-                pGetStateReq->ClientIndex = req.ClientIndex;
-                pGetStateReq->DeviceType = pBthDevice->DeviceType;
-
-                transferred = sizeof(AIRBENDER_GET_CLIENT_DETAILS);
-
-                pGetStateReq->ClientAddress = pBthDevice->ClientAddress;
+            if (NT_SUCCESS(status)&&OutputBufferLength==sizeof(AIRBENDER_GET_HOST_BD_ADDR)) {
+                transferred = sizeof(BD_ADDR);
+                RtlCopyMemory(&pGetBdAddr->Host, &pDeviceContext->BluetoothHostAddress, transferred);
+            } else {
+                TraceEvents(TRACE_LEVEL_ERROR,
+                    TRACE_QUEUE, "Buffer size mismatch: %d != %d",
+                    (ULONG) OutputBufferLength, sizeof(AIRBENDER_GET_HOST_BD_ADDR));
             }
+
+            break;
+
+        #pragma endregion
+
+        #pragma region IOCTL_AIRBENDER_HOST_RESET
+
+        case IOCTL_AIRBENDER_HOST_RESET:
 
             TraceEvents(TRACE_LEVEL_INFORMATION,
-                TRACE_QUEUE, "Done");
-        }
+                TRACE_QUEUE, "IOCTL_AIRBENDER_HOST_RESET");
 
-        break;
+            pDeviceContext->Started = FALSE;
+            status = HCI_Command_Reset(pDeviceContext);
 
-#pragma endregion
+            BTH_DEVICE_LIST_FREE(&pDeviceContext->ClientDeviceList);
+            BTH_DEVICE_LIST_INIT(&pDeviceContext->ClientDeviceList);
 
-#pragma region IOCTL_AIRBENDER_GET_DS3_INPUT_REPORT
+            break;
 
-    case IOCTL_AIRBENDER_GET_DS3_INPUT_REPORT:
+        #pragma endregion
 
-        TraceEvents(TRACE_LEVEL_VERBOSE,
-            TRACE_QUEUE, "IOCTL_AIRBENDER_GET_DS3_INPUT_REPORT");
+        #pragma region IOCTL_AIRBENDER_GET_CLIENT_COUNT
 
-        status = WdfRequestRetrieveInputBuffer(
-            Request,
-            sizeof(AIRBENDER_GET_DS3_INPUT_REPORT),
-            (LPVOID)&pGetDs3Input,
-            &bufferLength);
+        case IOCTL_AIRBENDER_GET_CLIENT_COUNT:
 
-        if (NT_SUCCESS(status) && InputBufferLength == sizeof(AIRBENDER_GET_DS3_INPUT_REPORT))
-        {
-            pBthDevice = BTH_DEVICE_LIST_GET_BY_BD_ADDR(&pDeviceContext->ClientDeviceList, &pGetDs3Input->ClientAddress);
+            TraceEvents(TRACE_LEVEL_VERBOSE,
+                TRACE_QUEUE, "IOCTL_AIRBENDER_GET_CLIENT_COUNT");
 
-            if (pBthDevice == NULL)
-            {
-                TraceEvents(TRACE_LEVEL_INFORMATION,
-                    TRACE_QUEUE, "Device not found");
+            status = WdfRequestRetrieveOutputBuffer(
+                Request,
+                sizeof(AIRBENDER_GET_CLIENT_COUNT),
+                (LPVOID) &pGetClientCount,
+                &bufferLength);
 
-                status = STATUS_DEVICE_DOES_NOT_EXIST;
-                break;
+            if (NT_SUCCESS(status)&&OutputBufferLength==sizeof(AIRBENDER_GET_CLIENT_COUNT)) {
+                transferred = sizeof(AIRBENDER_GET_CLIENT_COUNT);
+                pGetClientCount->Count = BTH_DEVICE_LIST_GET_COUNT(&pDeviceContext->ClientDeviceList);
+            } else {
+                TraceEvents(TRACE_LEVEL_ERROR,
+                    TRACE_QUEUE, "Buffer size mismatch: %d != %d",
+                    (ULONG) OutputBufferLength, sizeof(AIRBENDER_GET_CLIENT_COUNT));
             }
 
-            status = WdfRequestForwardToIoQueue(Request, pBthDevice->HidInputReportQueue);
-            if (!NT_SUCCESS(status))
-            {
+            break;
+
+        #pragma endregion
+
+        #pragma region IOCTL_AIRBENDER_GET_CLIENT_DETAILS
+
+        case IOCTL_AIRBENDER_GET_CLIENT_DETAILS:
+
+            TraceEvents(TRACE_LEVEL_VERBOSE,
+                TRACE_QUEUE, "IOCTL_AIRBENDER_GET_CLIENT_DETAILS");
+
+            status = WdfRequestRetrieveInputBuffer(
+                Request,
+                sizeof(AIRBENDER_GET_CLIENT_DETAILS),
+                (LPVOID) &pGetStateReq,
+                &bufferLength);
+
+            if (NT_SUCCESS(status)&&InputBufferLength==sizeof(AIRBENDER_GET_CLIENT_DETAILS)) {
+                AIRBENDER_GET_CLIENT_DETAILS req = *pGetStateReq;
+
+                TraceEvents(TRACE_LEVEL_INFORMATION,
+                    TRACE_QUEUE, "Requesting state for device #%d", pGetStateReq->ClientIndex);
+
+                pBthDevice = BTH_DEVICE_LIST_GET_BY_INDEX(&pDeviceContext->ClientDeviceList, pGetStateReq->ClientIndex);
+
+                if (pBthDevice==NULL) {
+                    TraceEvents(TRACE_LEVEL_INFORMATION,
+                        TRACE_QUEUE, "Device not found");
+
+                    status = STATUS_DEVICE_DOES_NOT_EXIST;
+                    break;
+                }
+
+                status = WdfRequestRetrieveOutputBuffer(
+                    Request,
+                    sizeof(AIRBENDER_GET_CLIENT_DETAILS),
+                    (LPVOID) &pGetStateReq,
+                    &bufferLength);
+
+                if (NT_SUCCESS(status)&&OutputBufferLength==sizeof(AIRBENDER_GET_CLIENT_DETAILS)) {
+                    pGetStateReq->ClientIndex = req.ClientIndex;
+                    pGetStateReq->DeviceType = pBthDevice->DeviceType;
+
+                    transferred = sizeof(AIRBENDER_GET_CLIENT_DETAILS);
+
+                    pGetStateReq->ClientAddress = pBthDevice->ClientAddress;
+                }
+
+                TraceEvents(TRACE_LEVEL_INFORMATION,
+                    TRACE_QUEUE, "Done");
+            }
+
+            break;
+
+        #pragma endregion
+
+        #pragma region IOCTL_AIRBENDER_GET_DS3_INPUT_REPORT
+
+        case IOCTL_AIRBENDER_GET_DS3_INPUT_REPORT:
+
+            TraceEvents(TRACE_LEVEL_VERBOSE,
+                TRACE_QUEUE, "IOCTL_AIRBENDER_GET_DS3_INPUT_REPORT");
+
+            status = WdfRequestRetrieveInputBuffer(
+                Request,
+                sizeof(AIRBENDER_GET_DS3_INPUT_REPORT),
+                (LPVOID) &pGetDs3Input,
+                &bufferLength);
+
+            if (NT_SUCCESS(status)&&InputBufferLength==sizeof(AIRBENDER_GET_DS3_INPUT_REPORT)) {
+                pBthDevice = BTH_DEVICE_LIST_GET_BY_BD_ADDR(&pDeviceContext->ClientDeviceList, &pGetDs3Input->ClientAddress);
+
+                if (pBthDevice==NULL) {
+                    TraceEvents(TRACE_LEVEL_INFORMATION,
+                        TRACE_QUEUE, "Device not found");
+
+                    status = STATUS_DEVICE_DOES_NOT_EXIST;
+                    break;
+                }
+
+                status = WdfRequestForwardToIoQueue(Request, pBthDevice->HidInputReportQueue);
+                if (!NT_SUCCESS(status)) {
+                    TraceEvents(TRACE_LEVEL_ERROR,
+                        TRACE_QUEUE, "WdfRequestForwardToIoQueue failed with status %!STATUS!", status);
+                    break;
+                }
+
+                status = STATUS_PENDING;
+            }
+
+            break;
+
+        #pragma endregion
+
+        #pragma region IOCTL_AIRBENDER_SET_DS3_OUTPUT_REPORT
+
+        case IOCTL_AIRBENDER_SET_DS3_OUTPUT_REPORT:
+
+            TraceEvents(TRACE_LEVEL_VERBOSE,
+                TRACE_QUEUE, "IOCTL_AIRBENDER_SET_DS3_OUTPUT_REPORT");
+
+            status = WdfRequestRetrieveInputBuffer(
+                Request,
+                sizeof(AIRBENDER_SET_DS3_OUTPUT_REPORT),
+                (LPVOID) &pSetDs3Output,
+                &bufferLength);
+
+            if (NT_SUCCESS(status)&&InputBufferLength==sizeof(AIRBENDER_SET_DS3_OUTPUT_REPORT)) {
+                pBthDevice = BTH_DEVICE_LIST_GET_BY_BD_ADDR(&pDeviceContext->ClientDeviceList, &pSetDs3Output->ClientAddress);
+
+                if (pBthDevice==NULL) {
+                    TraceEvents(TRACE_LEVEL_INFORMATION,
+                        TRACE_QUEUE, "Device not found");
+
+                    status = STATUS_DEVICE_DOES_NOT_EXIST;
+                    break;
+                }
+
+                buffer = WdfMemoryGetBuffer(pBthDevice->HidOutputReportMemory, &bufferLength);
+
+                RtlCopyMemory(buffer, pSetDs3Output->ReportBuffer, bufferLength);
+            }
+
+            break;
+
+        #pragma endregion
+
+        #pragma region IOCTL_AIRBENDER_PORT_RESET
+
+        case IOCTL_AIRBENDER_HOST_SHUTDOWN:
+
+            TraceEvents(TRACE_LEVEL_INFORMATION,
+                TRACE_QUEUE, "IOCTL_AIRBENDER_HOST_SHUTDOWN");
+
+            pDeviceContext->Started = TRUE; // suppresses boot-up after reset
+            status = HCI_Command_Reset(pDeviceContext);
+
+            if (!NT_SUCCESS(status)) {
+                TraceEvents(TRACE_LEVEL_WARNING,
+                    TRACE_QUEUE,
+                    "HCI_Command_Reset failed with status %!STATUS!", status);
+            }
+
+            BTH_DEVICE_LIST_FREE(&pDeviceContext->ClientDeviceList);
+            BTH_DEVICE_LIST_INIT(&pDeviceContext->ClientDeviceList);
+
+            status = WdfUsbTargetDeviceResetPortSynchronously(pDeviceContext->UsbDevice);
+            if (!NT_SUCCESS(status)) {
+                TraceEvents(TRACE_LEVEL_ERROR,
+                    TRACE_QUEUE,
+                    "WdfUsbTargetDeviceResetPortSynchronously failed with status %!STATUS!",
+                    status);
+            }
+
+            break;
+
+        #pragma endregion
+
+        #pragma region IOCTL_AIRBENDER_GET_CLIENT_ARRIVAL
+
+        case IOCTL_AIRBENDER_GET_CLIENT_ARRIVAL:
+
+            TraceEvents(TRACE_LEVEL_INFORMATION,
+                TRACE_QUEUE, "IOCTL_AIRBENDER_GET_CLIENT_ARRIVAL");
+
+            status = WdfRequestForwardToIoQueue(Request, pDeviceContext->ChildDeviceArrivalQueue);
+            if (!NT_SUCCESS(status)) {
                 TraceEvents(TRACE_LEVEL_ERROR,
                     TRACE_QUEUE, "WdfRequestForwardToIoQueue failed with status %!STATUS!", status);
                 break;
             }
 
+            TraceEvents(TRACE_LEVEL_INFORMATION,
+                TRACE_QUEUE, "Request queued");
+
             status = STATUS_PENDING;
-        }
 
-        break;
+            break;
 
-#pragma endregion
+        #pragma endregion
 
-#pragma region IOCTL_AIRBENDER_SET_DS3_OUTPUT_REPORT
+        #pragma region IOCTL_AIRBENDER_GET_CLIENT_REMOVAL
 
-    case IOCTL_AIRBENDER_SET_DS3_OUTPUT_REPORT:
+        case IOCTL_AIRBENDER_GET_CLIENT_REMOVAL:
 
-        TraceEvents(TRACE_LEVEL_VERBOSE,
-            TRACE_QUEUE, "IOCTL_AIRBENDER_SET_DS3_OUTPUT_REPORT");
+            TraceEvents(TRACE_LEVEL_INFORMATION,
+                TRACE_QUEUE, "IOCTL_AIRBENDER_GET_CLIENT_REMOVAL");
 
-        status = WdfRequestRetrieveInputBuffer(
-            Request,
-            sizeof(AIRBENDER_SET_DS3_OUTPUT_REPORT),
-            (LPVOID)&pSetDs3Output,
-            &bufferLength);
-
-        if (NT_SUCCESS(status) && InputBufferLength == sizeof(AIRBENDER_SET_DS3_OUTPUT_REPORT))
-        {
-            pBthDevice = BTH_DEVICE_LIST_GET_BY_BD_ADDR(&pDeviceContext->ClientDeviceList, &pSetDs3Output->ClientAddress);
-
-            if (pBthDevice == NULL)
-            {
-                TraceEvents(TRACE_LEVEL_INFORMATION,
-                    TRACE_QUEUE, "Device not found");
-
-                status = STATUS_DEVICE_DOES_NOT_EXIST;
+            status = WdfRequestForwardToIoQueue(Request, pDeviceContext->ChildDeviceRemovalQueue);
+            if (!NT_SUCCESS(status)) {
+                TraceEvents(TRACE_LEVEL_ERROR,
+                    TRACE_QUEUE, "WdfRequestForwardToIoQueue failed with status %!STATUS!", status);
                 break;
             }
 
-            buffer = WdfMemoryGetBuffer(pBthDevice->HidOutputReportMemory, &bufferLength);
+            TraceEvents(TRACE_LEVEL_INFORMATION,
+                TRACE_QUEUE, "Request queued");
 
-            RtlCopyMemory(buffer, pSetDs3Output->ReportBuffer, bufferLength);
-        }
+            status = STATUS_PENDING;
 
-        break;
-
-#pragma endregion
-
-#pragma region IOCTL_AIRBENDER_PORT_RESET
-
-    case IOCTL_AIRBENDER_HOST_SHUTDOWN:
-
-        TraceEvents(TRACE_LEVEL_INFORMATION,
-            TRACE_QUEUE, "IOCTL_AIRBENDER_HOST_SHUTDOWN");
-
-        pDeviceContext->Started = TRUE; // suppresses boot-up after reset
-        status = HCI_Command_Reset(pDeviceContext);
-
-        if (!NT_SUCCESS(status))
-        {
-            TraceEvents(TRACE_LEVEL_WARNING,
-                TRACE_QUEUE,
-                "HCI_Command_Reset failed with status %!STATUS!", status);
-        }
-
-        BTH_DEVICE_LIST_FREE(&pDeviceContext->ClientDeviceList);
-        BTH_DEVICE_LIST_INIT(&pDeviceContext->ClientDeviceList);
-
-        status = WdfUsbTargetDeviceResetPortSynchronously(pDeviceContext->UsbDevice);
-        if (!NT_SUCCESS(status))
-        {
-            TraceEvents(TRACE_LEVEL_ERROR,
-                TRACE_QUEUE,
-                "WdfUsbTargetDeviceResetPortSynchronously failed with status %!STATUS!",
-                status);
-        }
-
-        break;
-
-#pragma endregion
-
-#pragma region IOCTL_AIRBENDER_GET_CLIENT_ARRIVAL
-
-    case IOCTL_AIRBENDER_GET_CLIENT_ARRIVAL:
-
-        TraceEvents(TRACE_LEVEL_INFORMATION,
-            TRACE_QUEUE, "IOCTL_AIRBENDER_GET_CLIENT_ARRIVAL");
-
-        status = WdfRequestForwardToIoQueue(Request, pDeviceContext->ChildDeviceArrivalQueue);
-        if (!NT_SUCCESS(status))
-        {
-            TraceEvents(TRACE_LEVEL_ERROR,
-                TRACE_QUEUE, "WdfRequestForwardToIoQueue failed with status %!STATUS!", status);
             break;
-        }
 
-        TraceEvents(TRACE_LEVEL_INFORMATION,
-            TRACE_QUEUE, "Request queued");
+        #pragma endregion
 
-        status = STATUS_PENDING;
+        #pragma region IOCTL_AIRBENDER_GET_HOST_VERSION
 
-        break;
+        case IOCTL_AIRBENDER_GET_HOST_VERSION:
 
-#pragma endregion
+            TraceEvents(TRACE_LEVEL_INFORMATION,
+                TRACE_QUEUE, "IOCTL_AIRBENDER_GET_HOST_VERSION");
 
-#pragma region IOCTL_AIRBENDER_GET_CLIENT_REMOVAL
+            status = WdfRequestRetrieveOutputBuffer(
+                Request,
+                sizeof(AIRBENDER_GET_HOST_VERSION),
+                (LPVOID) &pGetHostVersion,
+                &bufferLength);
 
-    case IOCTL_AIRBENDER_GET_CLIENT_REMOVAL:
+            if (NT_SUCCESS(status)&&OutputBufferLength==sizeof(AIRBENDER_GET_HOST_VERSION)) {
+                transferred = sizeof(AIRBENDER_GET_HOST_VERSION);
+                pGetHostVersion->HciVersionMajor = pDeviceContext->HciVersionMajor;
+                pGetHostVersion->LmpVersionMajor = pDeviceContext->LmpVersionMajor;
+            } else {
+                TraceEvents(TRACE_LEVEL_ERROR,
+                    TRACE_QUEUE, "Buffer size mismatch: %d != %d",
+                    (ULONG) OutputBufferLength, sizeof(AIRBENDER_GET_HOST_VERSION));
+            }
 
-        TraceEvents(TRACE_LEVEL_INFORMATION,
-            TRACE_QUEUE, "IOCTL_AIRBENDER_GET_CLIENT_REMOVAL");
-
-        status = WdfRequestForwardToIoQueue(Request, pDeviceContext->ChildDeviceRemovalQueue);
-        if (!NT_SUCCESS(status))
-        {
-            TraceEvents(TRACE_LEVEL_ERROR,
-                TRACE_QUEUE, "WdfRequestForwardToIoQueue failed with status %!STATUS!", status);
             break;
-        }
 
-        TraceEvents(TRACE_LEVEL_INFORMATION,
-            TRACE_QUEUE, "Request queued");
+        #pragma endregion
 
-        status = STATUS_PENDING;
-
-        break;
-
-#pragma endregion
-
-#pragma region IOCTL_AIRBENDER_GET_HOST_VERSION
-
-    case IOCTL_AIRBENDER_GET_HOST_VERSION:
-
-        TraceEvents(TRACE_LEVEL_INFORMATION,
-            TRACE_QUEUE, "IOCTL_AIRBENDER_GET_HOST_VERSION");
-
-        status = WdfRequestRetrieveOutputBuffer(
-            Request,
-            sizeof(AIRBENDER_GET_HOST_VERSION),
-            (LPVOID)&pGetHostVersion,
-            &bufferLength);
-
-        if (NT_SUCCESS(status) && OutputBufferLength == sizeof(AIRBENDER_GET_HOST_VERSION))
-        {
-            transferred = sizeof(AIRBENDER_GET_HOST_VERSION);
-            pGetHostVersion->HciVersionMajor = pDeviceContext->HciVersionMajor;
-            pGetHostVersion->LmpVersionMajor = pDeviceContext->LmpVersionMajor;
-        }
-        else
-        {
+        default:
             TraceEvents(TRACE_LEVEL_ERROR,
-                TRACE_QUEUE, "Buffer size mismatch: %d != %d",
-                (ULONG)OutputBufferLength, sizeof(AIRBENDER_GET_HOST_VERSION));
-        }
-
-        break;
-
-#pragma endregion
-
-    default:
-        TraceEvents(TRACE_LEVEL_ERROR,
-            TRACE_QUEUE, "Unknown IOCTL code");
-        status = STATUS_INVALID_PARAMETER;
-        break;
+                TRACE_QUEUE, "Unknown IOCTL code");
+            status = STATUS_INVALID_PARAMETER;
+            break;
     }
 
-    if (status != STATUS_PENDING)
+    if (status!=STATUS_PENDING)
         WdfRequestCompleteWithInformation(Request, status, transferred);
 
-    // TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_QUEUE, "%!FUNC! Exit");
+    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_QUEUE, "%!FUNC! Exited");
 }
 
 VOID
@@ -581,8 +558,7 @@ VOID
 AirBenderWriteBulkPipeEvtIoDefault(
     WDFQUEUE  Queue,
     WDFREQUEST  Request
-)
-{
+) {
     NTSTATUS                            status;
     PDEVICE_CONTEXT                     pDeviceCtx;
     size_t                              bufferLength;
@@ -597,17 +573,15 @@ AirBenderWriteBulkPipeEvtIoDefault(
     status = WdfRequestRetrieveInputBuffer(
         Request,
         sizeof(AIRBENDER_SET_DS3_OUTPUT_REPORT),
-        (LPVOID)&pSetDs3Output,
+        (LPVOID) &pSetDs3Output,
         &bufferLength);
 
-    if (NT_SUCCESS(status) && bufferLength == sizeof(AIRBENDER_SET_DS3_OUTPUT_REPORT))
-    {
+    if (NT_SUCCESS(status)&&bufferLength==sizeof(AIRBENDER_SET_DS3_OUTPUT_REPORT)) {
         L2CAP_CID scid;
 
         pBthDevice = BTH_DEVICE_LIST_GET_BY_BD_ADDR(&pDeviceCtx->ClientDeviceList, &pSetDs3Output->ClientAddress);
 
-        if (pBthDevice == NULL)
-        {
+        if (pBthDevice==NULL) {
             TraceEvents(TRACE_LEVEL_INFORMATION,
                 TRACE_QUEUE, "Device not found");
 
@@ -628,8 +602,7 @@ AirBenderWriteBulkPipeEvtIoDefault(
             pSetDs3Output->ReportBuffer,
             DS3_HID_OUTPUT_REPORT_SIZE);
 
-        if (!NT_SUCCESS(status))
-        {
+        if (!NT_SUCCESS(status)) {
             TraceEvents(TRACE_LEVEL_ERROR,
                 TRACE_QUEUE, "HID_Command failed with status %!STATUS!", status);
         }
@@ -637,6 +610,6 @@ AirBenderWriteBulkPipeEvtIoDefault(
 
     WdfRequestComplete(Request, status);
 
-    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_QUEUE, "%!FUNC! Exit");
+    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_QUEUE, "%!FUNC! Exited");
 }
 

@@ -69,8 +69,7 @@ Return Value:
 
     status = WdfDeviceCreate(&DeviceInit, &deviceAttributes, &device);
 
-    if (NT_SUCCESS(status))
-    {
+    if (NT_SUCCESS(status)) {
         status = AirBenderChildQueuesInitialize(device);
         if (!NT_SUCCESS(status)) {
             return status;
@@ -152,7 +151,7 @@ Return Value:
     UNREFERENCED_PARAMETER(ResourceList);
     UNREFERENCED_PARAMETER(ResourceListTranslated);
 
-    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DRIVER, "%!FUNC! Entry");
+    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DRIVER, "%!FUNC! Entry");
 
     status = STATUS_SUCCESS;
     pDeviceContext = DeviceGetContext(Device);
@@ -168,7 +167,7 @@ Return Value:
     // the interfaces again because the USB stack could reconfigure the device on
     // restart.
     //
-    if (pDeviceContext->UsbDevice == NULL) {
+    if (pDeviceContext->UsbDevice==NULL) {
 
         status = WdfUsbTargetDeviceCreate(Device,
             WDF_NO_OBJECT_ATTRIBUTES,
@@ -204,7 +203,7 @@ Return Value:
     pDeviceContext->UsbInterface =
         WdfUsbTargetDeviceGetInterface(pDeviceContext->UsbDevice, 0);
 
-    if (NULL == pDeviceContext->UsbInterface) {
+    if (NULL==pDeviceContext->UsbInterface) {
         status = STATUS_UNSUCCESSFUL;
         TraceEvents(TRACE_LEVEL_ERROR, TRACE_DEVICE,
             "WdfUsbTargetDeviceGetInterface 0 failed with status %!STATUS!",
@@ -217,7 +216,7 @@ Return Value:
     //
     // Get pipe handles
     //
-    for (index = 0; index < numberConfiguredPipes; index++) {
+    for (index = 0; index<numberConfiguredPipes; index++) {
 
         WDF_USB_PIPE_INFORMATION_INIT(&pipeInfo);
 
@@ -232,20 +231,20 @@ Return Value:
         //
         WdfUsbTargetPipeSetNoMaximumPacketSizeCheck(pipe);
 
-        if (WdfUsbPipeTypeInterrupt == pipeInfo.PipeType) {
+        if (WdfUsbPipeTypeInterrupt==pipeInfo.PipeType) {
             TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DEVICE,
                 "Interrupt Pipe is 0x%p\n", pipe);
             pDeviceContext->InterruptPipe = pipe;
         }
 
-        if (WdfUsbPipeTypeBulk == pipeInfo.PipeType &&
+        if (WdfUsbPipeTypeBulk==pipeInfo.PipeType &&
             WdfUsbTargetPipeIsInEndpoint(pipe)) {
             TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DEVICE,
                 "BulkInput Pipe is 0x%p\n", pipe);
             pDeviceContext->BulkReadPipe = pipe;
         }
 
-        if (WdfUsbPipeTypeBulk == pipeInfo.PipeType &&
+        if (WdfUsbPipeTypeBulk==pipeInfo.PipeType &&
             WdfUsbTargetPipeIsOutEndpoint(pipe)) {
             TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DEVICE,
                 "BulkOutput Pipe is 0x%p\n", pipe);
@@ -271,7 +270,7 @@ Return Value:
     AirBenderConfigContReaderForInterruptEndPoint(Device);
     AirBenderConfigContReaderForBulkReadEndPoint(pDeviceContext);
 
-    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DRIVER, "%!FUNC! Exit");
+    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DRIVER, "%!FUNC! Exit");
 
     return status;
 }
@@ -281,8 +280,7 @@ NTSTATUS
 AirBenderEvtDeviceD0Entry(
     WDFDEVICE  Device,
     WDF_POWER_DEVICE_STATE  PreviousState
-)
-{
+) {
     PDEVICE_CONTEXT         pDeviceContext;
     NTSTATUS                status;
     BOOLEAN                 isTargetStarted;
@@ -290,7 +288,7 @@ AirBenderEvtDeviceD0Entry(
     pDeviceContext = DeviceGetContext(Device);
     isTargetStarted = FALSE;
 
-    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DRIVER, "%!FUNC! Entry");
+    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DRIVER, "%!FUNC! Entry");
 
     UNREFERENCED_PARAMETER(PreviousState);
 
@@ -340,7 +338,7 @@ End:
 
     HCI_Command_Reset(pDeviceContext);
 
-    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DRIVER, "%!FUNC! Exit");
+    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DRIVER, "%!FUNC! Exited with status %!STATUS!", status);
 
     return status;
 }
@@ -350,20 +348,18 @@ NTSTATUS
 AirBenderEvtDeviceD0Exit(
     WDFDEVICE  Device,
     WDF_POWER_DEVICE_STATE  TargetState
-)
-{
+) {
     UNREFERENCED_PARAMETER(Device);
     UNREFERENCED_PARAMETER(TargetState);
 
-    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DRIVER, "%!FUNC! Entry");
+    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DRIVER, "%!FUNC! Entry");
 
-    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DRIVER, "%!FUNC! Exit");
+    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DRIVER, "%!FUNC! Exited");
 
     return STATUS_SUCCESS;
 }
 
-VOID InitHidInitReports(IN PDEVICE_CONTEXT Context)
-{
+VOID InitHidInitReports(IN PDEVICE_CONTEXT Context) {
     InitByteArray(&Context->HidInitReports);
 
     APPEND_BYTE_ARRAY(Context->HidInitReports, P99_PROTECT({

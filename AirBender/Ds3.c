@@ -33,13 +33,14 @@ Ds3ConnectionRequest(
     PDEVICE_CONTEXT Context,
     PBTH_DEVICE Device,
     PUCHAR Buffer,
-    PBYTE CID)
-{
+    PBYTE CID) {
     NTSTATUS    status;
     L2CAP_CID   dcid;
     L2CAP_CID   scid;
 
-    PL2CAP_SIGNALLING_CONNECTION_REQUEST data = (PL2CAP_SIGNALLING_CONNECTION_REQUEST)&Buffer[8];
+    PL2CAP_SIGNALLING_CONNECTION_REQUEST data = (PL2CAP_SIGNALLING_CONNECTION_REQUEST) &Buffer[8];
+
+    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DS3, "%!FUNC! Entry");
 
     scid = data->SCID;
 
@@ -51,11 +52,11 @@ Ds3ConnectionRequest(
 
     TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DS3,
         "! L2CAP_SET_CONNECTION_TYPE: PSM: %02X SCID: %04X DCID: %04X",
-        data->PSM, *(PUSHORT)&scid, *(PUSHORT)&dcid);
+        data->PSM, *(PUSHORT) &scid, *(PUSHORT) &dcid);
 
     TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DS3,
         ">> L2CAP_Connection_Request PSM: %02X SCID: %04X DCID: %04X",
-        data->PSM, *(PUSHORT)&scid, *(PUSHORT)&dcid);
+        data->PSM, *(PUSHORT) &scid, *(PUSHORT) &dcid);
 
     status = L2CAP_Command_Connection_Response(
         Context,
@@ -66,15 +67,14 @@ Ds3ConnectionRequest(
         L2CAP_ConnectionResponseResult_ConnectionPending,
         L2CAP_ConnectionResponseStatus_AuthorisationPending);
 
-    if (!NT_SUCCESS(status))
-    {
+    if (!NT_SUCCESS(status)) {
         TraceEvents(TRACE_LEVEL_ERROR, TRACE_DS3, "L2CAP_Command_Connection_Response (PENDING) failed");
         return status;
     }
 
     TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DS3,
         "<< L2CAP_Connection_Response SCID: %04X DCID: %04X",
-        *(PUSHORT)&scid, *(PUSHORT)&dcid);
+        *(PUSHORT) &scid, *(PUSHORT) &dcid);
 
     status = L2CAP_Command_Connection_Response(
         Context,
@@ -85,15 +85,14 @@ Ds3ConnectionRequest(
         L2CAP_ConnectionResponseResult_ConnectionSuccessful,
         L2CAP_ConnectionResponseStatus_NoFurtherInformationAvailable);
 
-    if (!NT_SUCCESS(status))
-    {
+    if (!NT_SUCCESS(status)) {
         TraceEvents(TRACE_LEVEL_ERROR, TRACE_DS3, "L2CAP_Command_Connection_Response (SUCCESSFUL) failed");
         return status;
     }
 
     TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DS3,
         "<< L2CAP_Connection_Response SCID: %04X DCID: %04X",
-        *(PUSHORT)&scid, *(PUSHORT)&dcid);
+        *(PUSHORT) &scid, *(PUSHORT) &dcid);
 
     status = L2CAP_Command_Configuration_Request(
         Context,
@@ -102,15 +101,16 @@ Ds3ConnectionRequest(
         scid,
         TRUE);
 
-    if (!NT_SUCCESS(status))
-    {
+    if (!NT_SUCCESS(status)) {
         TraceEvents(TRACE_LEVEL_ERROR, TRACE_DS3, "L2CAP_Command_Configuration_Request failed");
         return status;
     }
 
     TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DS3,
         "<< L2CAP_Configuration_Request SCID: %04X DCID: %04X",
-        *(PUSHORT)&scid, *(PUSHORT)&dcid);
+        *(PUSHORT) &scid, *(PUSHORT) &dcid);
+
+    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DS3, "%!FUNC! Exited with status %!STATUS!", status);
 
     return status;
 }
@@ -120,77 +120,78 @@ Ds3ConnectionResponse(
     PDEVICE_CONTEXT Context,
     PBTH_DEVICE Device,
     PUCHAR Buffer,
-    PBYTE CID)
-{
+    PBYTE CID) {
     NTSTATUS    status = STATUS_SUCCESS;
     L2CAP_CID   dcid;
     L2CAP_CID   scid;
 
-    PL2CAP_SIGNALLING_CONNECTION_RESPONSE data = (PL2CAP_SIGNALLING_CONNECTION_RESPONSE)&Buffer[8];
+    PL2CAP_SIGNALLING_CONNECTION_RESPONSE data = (PL2CAP_SIGNALLING_CONNECTION_RESPONSE) &Buffer[8];
+
+    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DS3, "%!FUNC! Entry");
 
     scid = data->SCID;
     dcid = data->DCID;
 
     TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DS3,
         ">> L2CAP_Connection_Response SCID: %04X DCID: %04X",
-        *(PUSHORT)&scid, *(PUSHORT)&dcid);
+        *(PUSHORT) &scid, *(PUSHORT) &dcid);
 
-    switch ((L2CAP_CONNECTION_RESPONSE_RESULT)data->Result)
-    {
-    case L2CAP_ConnectionResponseResult_ConnectionSuccessful:
+    switch ((L2CAP_CONNECTION_RESPONSE_RESULT) data->Result) {
+        case L2CAP_ConnectionResponseResult_ConnectionSuccessful:
 
-        L2CAP_SET_CONNECTION_TYPE(
-            Device,
-            L2CAP_PSM_HID_Service,
-            dcid,
-            &scid);
+            L2CAP_SET_CONNECTION_TYPE(
+                Device,
+                L2CAP_PSM_HID_Service,
+                dcid,
+                &scid);
 
-        TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DS3,
-            "! L2CAP_SET_CONNECTION_TYPE: L2CAP_PSM_HID_Service SCID: %04X DCID: %04X",
-            *(PUSHORT)&scid, *(PUSHORT)&dcid);
+            TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DS3,
+                "! L2CAP_SET_CONNECTION_TYPE: L2CAP_PSM_HID_Service SCID: %04X DCID: %04X",
+                *(PUSHORT) &scid, *(PUSHORT) &dcid);
 
-        TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DS3,
-            ">> >> L2CAP_ConnectionResponseResult_ConnectionSuccessful SCID: %04X DCID: %04X",
-            *(PUSHORT)&scid, *(PUSHORT)&dcid);
+            TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DS3,
+                ">> >> L2CAP_ConnectionResponseResult_ConnectionSuccessful SCID: %04X DCID: %04X",
+                *(PUSHORT) &scid, *(PUSHORT) &dcid);
 
-        status = L2CAP_Command_Configuration_Request(
-            Context,
-            Device->HCI_ConnectionHandle,
-            (*CID)++,
-            dcid,
-            TRUE);
+            status = L2CAP_Command_Configuration_Request(
+                Context,
+                Device->HCI_ConnectionHandle,
+                (*CID)++,
+                dcid,
+                TRUE);
 
-        if (!NT_SUCCESS(status))
-        {
-            TraceEvents(TRACE_LEVEL_ERROR, TRACE_DS3,
-                "L2CAP_Command_Configuration_Request failed");
+            if (!NT_SUCCESS(status)) {
+                TraceEvents(TRACE_LEVEL_ERROR, TRACE_DS3,
+                    "L2CAP_Command_Configuration_Request failed");
+                break;
+            }
+
+            TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DS3,
+                "<< L2CAP_Configuration_Request SCID: %04X DCID: %04X",
+                *(PUSHORT) &scid, *(PUSHORT) &dcid);
+
             break;
-        }
-
-        TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DS3,
-            "<< L2CAP_Configuration_Request SCID: %04X DCID: %04X",
-            *(PUSHORT)&scid, *(PUSHORT)&dcid);
-
-        break;
-    case L2CAP_ConnectionResponseResult_ConnectionPending:
-        TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DS3,
-            ">> >> L2CAP_ConnectionResponseResult_ConnectionPending");
-        break;
-    case L2CAP_ConnectionResponseResult_ConnectionRefusedPsmNotNupported:
-        TraceEvents(TRACE_LEVEL_ERROR, TRACE_DS3,
-            "L2CAP_ConnectionResponseResult_ConnectionRefusedPsmNotNupported");
-        break;
-    case L2CAP_ConnectionResponseResult_ConnectionRefusedSecurityBlock:
-        TraceEvents(TRACE_LEVEL_ERROR, TRACE_DS3,
-            "L2CAP_ConnectionResponseResult_ConnectionRefusedSecurityBlock");
-        break;
-    case L2CAP_ConnectionResponseResult_ConnectionRefusedNoResourcesAvailable:
-        TraceEvents(TRACE_LEVEL_ERROR, TRACE_DS3,
-            "L2CAP_ConnectionResponseResult_ConnectionRefusedNoResourcesAvailable");
-        break;
-    default:
-        break;
+        case L2CAP_ConnectionResponseResult_ConnectionPending:
+            TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DS3,
+                ">> >> L2CAP_ConnectionResponseResult_ConnectionPending");
+            break;
+        case L2CAP_ConnectionResponseResult_ConnectionRefusedPsmNotNupported:
+            TraceEvents(TRACE_LEVEL_ERROR, TRACE_DS3,
+                "L2CAP_ConnectionResponseResult_ConnectionRefusedPsmNotNupported");
+            break;
+        case L2CAP_ConnectionResponseResult_ConnectionRefusedSecurityBlock:
+            TraceEvents(TRACE_LEVEL_ERROR, TRACE_DS3,
+                "L2CAP_ConnectionResponseResult_ConnectionRefusedSecurityBlock");
+            break;
+        case L2CAP_ConnectionResponseResult_ConnectionRefusedNoResourcesAvailable:
+            TraceEvents(TRACE_LEVEL_ERROR, TRACE_DS3,
+                "L2CAP_ConnectionResponseResult_ConnectionRefusedNoResourcesAvailable");
+            break;
+        default:
+            break;
     }
+
+    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DS3, "%!FUNC! Exited with status %!STATUS!", status);
 
     return status;
 }
@@ -198,15 +199,16 @@ Ds3ConnectionResponse(
 NTSTATUS Ds3ConfigurationRequest(
     PDEVICE_CONTEXT Context,
     PBTH_DEVICE Device,
-    PUCHAR Buffer)
-{
+    PUCHAR Buffer) {
     NTSTATUS    status;
     L2CAP_CID   dcid;
     L2CAP_CID   scid;
     PVOID       pHidCmd;
     ULONG       hidCmdLen;
 
-    PL2CAP_SIGNALLING_CONFIGURATION_REQUEST data = (PL2CAP_SIGNALLING_CONFIGURATION_REQUEST)&Buffer[8];
+    PL2CAP_SIGNALLING_CONFIGURATION_REQUEST data = (PL2CAP_SIGNALLING_CONFIGURATION_REQUEST) &Buffer[8];
+
+    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DS3, "%!FUNC! Entry");
 
     dcid = data->DCID;
 
@@ -214,11 +216,11 @@ NTSTATUS Ds3ConfigurationRequest(
 
     TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DS3,
         "! L2CAP_DEVICE_GET_SCID: DCID %04X -> SCID %04X",
-        *(PUSHORT)&dcid, *(PUSHORT)&scid);
+        *(PUSHORT) &dcid, *(PUSHORT) &scid);
 
     TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DS3,
         ">> L2CAP_Configuration_Request SCID: %04X DCID: %04X",
-        *(PUSHORT)&scid.Msb, *(PUSHORT)&dcid);
+        *(PUSHORT) &scid.Msb, *(PUSHORT) &dcid);
 
     status = L2CAP_Command_Configuration_Response(
         Context,
@@ -226,22 +228,19 @@ NTSTATUS Ds3ConfigurationRequest(
         data->Identifier,
         scid);
 
-    if (!NT_SUCCESS(status))
-    {
+    if (!NT_SUCCESS(status)) {
         TraceEvents(TRACE_LEVEL_ERROR, TRACE_DS3, "L2CAP_Command_Configuration_Response failed");
         return status;
     }
 
     TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DS3,
         "<< L2CAP_Configuration_Response SCID: %04X DCID: %04X",
-        *(PUSHORT)&scid, *(PUSHORT)&dcid);
+        *(PUSHORT) &scid, *(PUSHORT) &dcid);
 
-    if (Device->IsServiceStarted)
-    {
+    if (Device->IsServiceStarted) {
         Device->CanStartHid = TRUE;
 
-        if (Device->InitHidStage < DS3_INIT_HID_STAGE_MAX)
-        {
+        if (Device->InitHidStage<DS3_INIT_HID_STAGE_MAX) {
             L2CAP_DEVICE_GET_SCID_FOR_TYPE(
                 Device,
                 L2CAP_PSM_HID_Service,
@@ -249,7 +248,7 @@ NTSTATUS Ds3ConfigurationRequest(
 
             TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DS3,
                 "! L2CAP_DEVICE_GET_SCID_FOR_TYPE: L2CAP_PSM_HID_Service -> SCID %04X",
-                *(PUSHORT)&scid);
+                *(PUSHORT) &scid);
 
             GetElementsByteArray(
                 &Context->HidInitReports,
@@ -264,17 +263,18 @@ NTSTATUS Ds3ConfigurationRequest(
                 pHidCmd,
                 hidCmdLen);
 
-            if (!NT_SUCCESS(status))
-            {
+            if (!NT_SUCCESS(status)) {
                 TraceEvents(TRACE_LEVEL_ERROR, TRACE_DS3, "HID_Command failed");
                 return status;
             }
 
             TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DS3,
                 "<< HID_Command Index: %d, Length: %d",
-                Device->InitHidStage - 1, hidCmdLen);
+                Device->InitHidStage-1, hidCmdLen);
         }
     }
+
+    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DS3, "%!FUNC! Exited with status %!STATUS!", status);
 
     return status;
 }
@@ -284,22 +284,22 @@ Ds3ConfigurationResponse(
     PDEVICE_CONTEXT Context,
     PBTH_DEVICE Device,
     PUCHAR Buffer,
-    PBYTE CID)
-{
+    PBYTE CID) {
     NTSTATUS    status = STATUS_SUCCESS;
     L2CAP_CID   dcid;
     L2CAP_CID   scid;
 
-    PL2CAP_SIGNALLING_CONFIGURATION_RESPONSE data = (PL2CAP_SIGNALLING_CONFIGURATION_RESPONSE)&Buffer[8];
+    PL2CAP_SIGNALLING_CONFIGURATION_RESPONSE data = (PL2CAP_SIGNALLING_CONFIGURATION_RESPONSE) &Buffer[8];
+
+    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DS3, "%!FUNC! Entry");
 
     scid = data->SCID;
 
     TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DS3,
         ">> L2CAP_Configuration_Response SCID: 0x%04X",
-        *(PUSHORT)&scid);
+        *(PUSHORT) &scid);
 
-    if (Device->CanStartService)
-    {
+    if (Device->CanStartService) {
         TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DS3, "Requesting service connection");
 
         L2CAP_GET_NEW_CID(&dcid);
@@ -311,16 +311,17 @@ Ds3ConfigurationResponse(
             dcid,
             L2CAP_PSM_HID_Service);
 
-        if (!NT_SUCCESS(status))
-        {
+        if (!NT_SUCCESS(status)) {
             TraceEvents(TRACE_LEVEL_ERROR, TRACE_DS3, "L2CAP_Command_Connection_Request failed");
             return status;
         }
 
         TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DS3,
             "<< L2CAP_Connection_Request SCID: %04X DCID: %04X",
-            *(PUSHORT)&scid, *(PUSHORT)&dcid);
+            *(PUSHORT) &scid, *(PUSHORT) &dcid);
     }
+
+    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DS3, "%!FUNC! Exited with status %!STATUS!", status);
 
     return status;
 }
@@ -329,21 +330,22 @@ NTSTATUS
 Ds3DisconnectionRequest(
     PDEVICE_CONTEXT Context,
     PBTH_DEVICE Device,
-    PUCHAR Buffer)
-{
+    PUCHAR Buffer) {
     NTSTATUS    status;
     L2CAP_CID   dcid;
     L2CAP_CID   scid;
     L2CAP_CID   intDcid, comDcid;
 
-    PL2CAP_SIGNALLING_DISCONNECTION_REQUEST data = (PL2CAP_SIGNALLING_DISCONNECTION_REQUEST)&Buffer[8];
+    PL2CAP_SIGNALLING_DISCONNECTION_REQUEST data = (PL2CAP_SIGNALLING_DISCONNECTION_REQUEST) &Buffer[8];
+
+    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DS3, "%!FUNC! Entry");
 
     scid = data->SCID;
     dcid = data->DCID;
 
     TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DS3,
         ">> L2CAP_Disconnection_Request SCID: %04X DCID: %04X",
-        *(PUSHORT)&scid, *(PUSHORT)&dcid);
+        *(PUSHORT) &scid, *(PUSHORT) &dcid);
 
     L2CAP_DEVICE_GET_DCID_FOR_TYPE(
         Device,
@@ -355,16 +357,14 @@ Ds3DisconnectionRequest(
         L2CAP_PSM_HID_Command,
         &comDcid);
 
-    if (*(PUSHORT)&intDcid == *(PUSHORT)&data->DCID
-        || *(PUSHORT)&comDcid == *(PUSHORT)&data->DCID)
-    {
+    if (*(PUSHORT) &intDcid==*(PUSHORT) &data->DCID
+        ||*(PUSHORT) &comDcid==*(PUSHORT) &data->DCID) {
         TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DS3,
             "Invoking HCI_Command_Disconnect");
 
         status = HCI_Command_Disconnect(Context, Device->HCI_ConnectionHandle);
 
-        if (!NT_SUCCESS(status))
-        {
+        if (!NT_SUCCESS(status)) {
             TraceEvents(TRACE_LEVEL_ERROR, TRACE_DS3, "HCI_Command_Disconnect failed");
         }
     }
@@ -376,15 +376,16 @@ Ds3DisconnectionRequest(
         dcid,
         scid);
 
-    if (!NT_SUCCESS(status))
-    {
+    if (!NT_SUCCESS(status)) {
         TraceEvents(TRACE_LEVEL_ERROR, TRACE_DS3, "L2CAP_Command_Disconnection_Response failed");
         return status;
     }
 
     TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DS3,
         "<< L2CAP_Disconnection_Response SCID: %04X DCID: %04X",
-        *(PUSHORT)&scid, *(PUSHORT)&dcid);
+        *(PUSHORT) &scid, *(PUSHORT) &dcid);
+
+    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DS3, "%!FUNC! Exited with status %!STATUS!", status);
 
     return status;
 }
@@ -392,8 +393,7 @@ Ds3DisconnectionRequest(
 NTSTATUS
 Ds3DisconnectionResponse(
     PDEVICE_CONTEXT Context,
-    PBTH_DEVICE Device)
-{
+    PBTH_DEVICE Device) {
     NTSTATUS        status = STATUS_SUCCESS;
     L2CAP_CID       scid;
     BYTE            hidCommandEnable[] = {
@@ -410,11 +410,12 @@ Ds3DisconnectionResponse(
     };
     PVOID           memBuffer;
 
+    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DS3, "%!FUNC! Entry");
+
     TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DS3,
         ">> L2CAP_Disconnection_Response");
 
-    if (Device->CanStartHid)
-    {
+    if (Device->CanStartHid) {
         Device->IsServiceStarted = FALSE;
 
         L2CAP_DEVICE_GET_SCID_FOR_TYPE(
@@ -429,8 +430,7 @@ Ds3DisconnectionResponse(
             hidCommandEnable,
             _countof(hidCommandEnable));
 
-        if (!NT_SUCCESS(status))
-        {
+        if (!NT_SUCCESS(status)) {
             TraceEvents(TRACE_LEVEL_ERROR, TRACE_DS3, "HID_Command ENABLE failed");
             return status;
         }
@@ -445,8 +445,7 @@ Ds3DisconnectionResponse(
             hidOutputReport,
             _countof(hidOutputReport));
 
-        if (!NT_SUCCESS(status))
-        {
+        if (!NT_SUCCESS(status)) {
             TraceEvents(TRACE_LEVEL_ERROR, TRACE_DS3, "HID_Command OUTPUT REPORT failed");
             return status;
         }
@@ -462,8 +461,7 @@ Ds3DisconnectionResponse(
             &Device->HidOutputReportMemory,
             &memBuffer);
 
-        if (!NT_SUCCESS(status))
-        {
+        if (!NT_SUCCESS(status)) {
             TraceEvents(TRACE_LEVEL_ERROR,
                 TRACE_DS3,
                 "WdfMemoryCreate failed with status %!STATUS!", status);
@@ -475,6 +473,8 @@ Ds3DisconnectionResponse(
         WdfTimerStart(Device->HidOutputReportTimer, WDF_REL_TIMEOUT_IN_MS(10));
     }
 
+    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DS3, "%!FUNC! Exited with status %!STATUS!", status);
+
     return status;
 }
 
@@ -482,8 +482,7 @@ NTSTATUS
 Ds3InitHidReportStage(
     PDEVICE_CONTEXT Context,
     PBTH_DEVICE Device,
-    PBYTE CID)
-{
+    PBYTE CID) {
     NTSTATUS                        status = STATUS_SUCCESS;
     L2CAP_CID                       dcid;
     L2CAP_CID                       scid;
@@ -493,8 +492,9 @@ Ds3InitHidReportStage(
     PAIRBENDER_GET_CLIENT_ARRIVAL   pArrival;
     size_t                          buflen;
 
-    if (Device->InitHidStage < DS3_INIT_HID_STAGE_MAX)
-    {
+    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DS3, "%!FUNC! Entry");
+
+    if (Device->InitHidStage<DS3_INIT_HID_STAGE_MAX) {
         L2CAP_DEVICE_GET_SCID_FOR_TYPE(
             Device,
             L2CAP_PSM_HID_Service,
@@ -513,24 +513,21 @@ Ds3InitHidReportStage(
             pHidCmd,
             hidCmdLen);
 
-        if (!NT_SUCCESS(status))
-        {
+        if (!NT_SUCCESS(status)) {
             TraceEvents(TRACE_LEVEL_ERROR, TRACE_DS3, "HID_Command failed");
             return status;
         }
 
         TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DS3,
             "<< HID_Command Index: %d, Length: %d",
-            Device->InitHidStage - 1, hidCmdLen);
-    }
-    else if (Device->IsServiceStarted)
-    {
+            Device->InitHidStage-1, hidCmdLen);
+    } else if (Device->IsServiceStarted) {
         L2CAP_DEVICE_GET_SCID_FOR_TYPE(Device, L2CAP_PSM_HID_Service, &scid);
         L2CAP_DEVICE_GET_DCID_FOR_TYPE(Device, L2CAP_PSM_HID_Service, &dcid);
 
         TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DS3,
             "<< L2CAP_Disconnection_Request SCID: %04X DCID: %04X",
-            *(PUSHORT)&scid, *(PUSHORT)&dcid);
+            *(PUSHORT) &scid, *(PUSHORT) &dcid);
 
         status = L2CAP_Command_Disconnection_Request(
             Context,
@@ -539,8 +536,7 @@ Ds3InitHidReportStage(
             scid,
             dcid);
 
-        if (!NT_SUCCESS(status))
-        {
+        if (!NT_SUCCESS(status)) {
             TraceEvents(TRACE_LEVEL_ERROR, TRACE_DS3, "L2CAP_Command_Disconnection_Request failed");
         }
 
@@ -551,16 +547,14 @@ Ds3InitHidReportStage(
             Context->ChildDeviceArrivalQueue,
             &arrivalRequest);
 
-        if (NT_SUCCESS(status))
-        {
+        if (NT_SUCCESS(status)) {
             status = WdfRequestRetrieveOutputBuffer(
                 arrivalRequest,
                 sizeof(AIRBENDER_GET_CLIENT_ARRIVAL),
-                (LPVOID)&pArrival,
+                (LPVOID) &pArrival,
                 &buflen);
 
-            if (NT_SUCCESS(status))
-            {
+            if (NT_SUCCESS(status)) {
                 pArrival->ClientAddress = Device->ClientAddress;
                 pArrival->DeviceType = Device->DeviceType;
             }
@@ -569,31 +563,32 @@ Ds3InitHidReportStage(
         }
     }
 
+    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DS3, "%!FUNC! Exited with status %!STATUS!", status);
+
     return status;
 }
 
 NTSTATUS
 Ds3ProcessHidInputReport(
     PBTH_DEVICE Device,
-    PUCHAR Buffer)
-{
+    PUCHAR Buffer) {
     NTSTATUS status;
     WDFREQUEST Request;
     PAIRBENDER_GET_DS3_INPUT_REPORT pGetDs3Input;
     size_t bufferLength;
 
+    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DS3, "%!FUNC! Entry");
+
     status = WdfIoQueueRetrieveNextRequest(Device->HidInputReportQueue, &Request);
 
-    if (NT_SUCCESS(status))
-    {
+    if (NT_SUCCESS(status)) {
         status = WdfRequestRetrieveOutputBuffer(
             Request,
             sizeof(AIRBENDER_GET_DS3_INPUT_REPORT),
-            (LPVOID)&pGetDs3Input,
+            (LPVOID) &pGetDs3Input,
             &bufferLength);
 
-        if (!NT_SUCCESS(status))
-        {
+        if (!NT_SUCCESS(status)) {
             TraceEvents(TRACE_LEVEL_ERROR, TRACE_DS3,
                 "WdfRequestRetrieveOutputBuffer failed with status 0x%X", status);
             WdfRequestComplete(Request, status);
@@ -608,6 +603,8 @@ Ds3ProcessHidInputReport(
 
         WdfRequestCompleteWithInformation(Request, status, bufferLength);
     }
+
+    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DS3, "%!FUNC! Exited with status %!STATUS!", status);
 
     return status;
 }

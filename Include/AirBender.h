@@ -88,8 +88,7 @@ SOFTWARE.
 *
 * \brief   Defines a Bluetooth client MAC address.
 */
-typedef struct _BD_ADDR
-{
+typedef struct _BD_ADDR {
     BYTE Address[6];
 
 } BD_ADDR, *PBD_ADDR;
@@ -99,8 +98,7 @@ typedef struct _BD_ADDR
 *
 * \brief   Defines an alias representing the possible types of the BTH_DEVICE.
 */
-typedef enum _BTH_DEVICE_TYPE
-{
+typedef enum _BTH_DEVICE_TYPE {
     DsTypeUnknown,
     DualShock3,
     DualShock4
@@ -108,20 +106,17 @@ typedef enum _BTH_DEVICE_TYPE
 } BTH_DEVICE_TYPE;
 
 
-typedef struct _AIRBENDER_GET_HOST_BD_ADDR
-{
+typedef struct _AIRBENDER_GET_HOST_BD_ADDR {
     BD_ADDR Host;
 
 } AIRBENDER_GET_HOST_BD_ADDR, *PAIRBENDER_GET_HOST_BD_ADDR;
 
-typedef struct _AIRBENDER_GET_CLIENT_COUNT
-{
+typedef struct _AIRBENDER_GET_CLIENT_COUNT {
     ULONG Count;
 
 } AIRBENDER_GET_CLIENT_COUNT, *PAIRBENDER_GET_CLIENT_COUNT;
 
-typedef struct _AIRBENDER_GET_CLIENT_DETAILS
-{
+typedef struct _AIRBENDER_GET_CLIENT_DETAILS {
     ULONG ClientIndex;
 
     BTH_DEVICE_TYPE DeviceType;
@@ -130,38 +125,33 @@ typedef struct _AIRBENDER_GET_CLIENT_DETAILS
 
 } AIRBENDER_GET_CLIENT_DETAILS, *PAIRBENDER_GET_CLIENT_DETAILS;
 
-typedef struct _AIRBENDER_GET_DS3_INPUT_REPORT
-{
+typedef struct _AIRBENDER_GET_DS3_INPUT_REPORT {
     BD_ADDR ClientAddress;
 
     UCHAR ReportBuffer[DS3_HID_INPUT_REPORT_SIZE];
 
 } AIRBENDER_GET_DS3_INPUT_REPORT, *PAIRBENDER_GET_DS3_INPUT_REPORT;
 
-typedef struct _AIRBENDER_SET_DS3_OUTPUT_REPORT
-{
+typedef struct _AIRBENDER_SET_DS3_OUTPUT_REPORT {
     BD_ADDR ClientAddress;
 
     UCHAR ReportBuffer[DS3_HID_OUTPUT_REPORT_SIZE];
 
 } AIRBENDER_SET_DS3_OUTPUT_REPORT, *PAIRBENDER_SET_DS3_OUTPUT_REPORT;
 
-typedef struct _AIRBENDER_GET_CLIENT_ARRIVAL
-{
+typedef struct _AIRBENDER_GET_CLIENT_ARRIVAL {
     BD_ADDR ClientAddress;
 
     BTH_DEVICE_TYPE DeviceType;
 
 } AIRBENDER_GET_CLIENT_ARRIVAL, *PAIRBENDER_GET_CLIENT_ARRIVAL;
 
-typedef struct _AIRBENDER_GET_CLIENT_REMOVAL
-{
+typedef struct _AIRBENDER_GET_CLIENT_REMOVAL {
     BD_ADDR ClientAddress;
 
 } AIRBENDER_GET_CLIENT_REMOVAL, *PAIRBENDER_GET_CLIENT_REMOVAL;
 
-typedef struct _AIRBENDER_GET_HOST_VERSION
-{
+typedef struct _AIRBENDER_GET_HOST_VERSION {
     BYTE HciVersionMajor;
 
     BYTE LmpVersionMajor;

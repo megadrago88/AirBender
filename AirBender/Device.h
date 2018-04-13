@@ -31,12 +31,11 @@ EXTERN_C_START
 // The device context performs the same job as
 // a WDM device extension in the driver frameworks
 //
-typedef struct _DEVICE_CONTEXT
-{
+typedef struct _DEVICE_CONTEXT {
     WDFUSBDEVICE UsbDevice;
 
     WDFUSBINTERFACE UsbInterface;
-    
+
     WDFUSBPIPE InterruptPipe;
 
     WDFUSBPIPE BulkReadPipe;
@@ -78,7 +77,7 @@ WDF_DECLARE_CONTEXT_TYPE_WITH_NAME(DEVICE_CONTEXT, DeviceGetContext)
 NTSTATUS
 AirBenderCreateDevice(
     _Inout_ PWDFDEVICE_INIT DeviceInit
-    );
+);
 
 //
 // Function to select the device's USB configuration and get a WDFUSBDEVICE

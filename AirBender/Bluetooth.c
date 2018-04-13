@@ -6,8 +6,7 @@ _Use_decl_annotations_
 VOID
 AirBenderBulkWriteEvtTimerFunc(
     WDFTIMER  Timer
-)
-{
+) {
     NTSTATUS                status;
     PBTH_DEVICE_CONTEXT     pBluetoothCtx;
     PBTH_DEVICE             pBthDevice;
@@ -43,14 +42,13 @@ AirBenderBulkWriteEvtTimerFunc(
         pBthDevice->HCI_ConnectionHandle,
         scid,
         buffer,
-        (ULONG)bufferLength);
+        (ULONG) bufferLength);
 
-    if (!NT_SUCCESS(status))
-    {
+    if (!NT_SUCCESS(status)) {
         TraceEvents(TRACE_LEVEL_ERROR,
-            TRACE_BLUETOOTH, 
+            TRACE_BLUETOOTH,
             "HID_Command failed with status %!STATUS!", status);
     }
 
-    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_BLUETOOTH, "%!FUNC! Exit");
+    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_BLUETOOTH, "%!FUNC! Exited with status %!STATUS!", status);
 }

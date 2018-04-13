@@ -35,8 +35,7 @@ SOFTWARE.
 #define APPEND_BYTE_ARRAY(_arr_, _bytes_)   do {BYTE b[] = _bytes_; \
                                             AppendElementsByteArray(&_arr_, b, _countof(b)); } while (0)
 
-typedef struct _BYTE_ARRAY_ELEMENT
-{
+typedef struct _BYTE_ARRAY_ELEMENT {
     LPVOID Data;
 
     ULONG Length;
@@ -45,8 +44,7 @@ typedef struct _BYTE_ARRAY_ELEMENT
 
 } BYTE_ARRAY_ELEMENT, *PBYTE_ARRAY_ELEMENT;
 
-typedef struct _BYTE_ARRAY
-{
+typedef struct _BYTE_ARRAY {
     ULONG logicalLength;
 
     PBYTE_ARRAY_ELEMENT head;
