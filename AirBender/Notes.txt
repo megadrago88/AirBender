@@ -1,0 +1,2 @@
+This file holds my notes for working with a dualshock three controller.
+
