@@ -32,6 +32,12 @@ EXTERN_C_START
 // a WDM device extension in the driver frameworks
 //
 typedef struct _DEVICE_CONTEXT {
+    BOOLEAN DisableSSP;
+
+    BOOLEAN Started;
+
+    BOOLEAN Initialized;
+
     WDFUSBDEVICE UsbDevice;
 
     WDFUSBINTERFACE UsbInterface;
@@ -42,13 +48,7 @@ typedef struct _DEVICE_CONTEXT {
 
     WDFUSBPIPE BulkWritePipe;
 
-    BOOLEAN DisableSSP;
-
-    BOOLEAN Started;
-
     BD_ADDR BluetoothHostAddress;
-
-    BOOLEAN Initialized;
 
     BTH_DEVICE_LIST ClientDeviceList;
 

@@ -221,16 +221,26 @@
       <WppRecorderEnabled>true</WppRecorderEnabled>
       <WppScanConfigurationData Condition="'%(ClCompile.ScanConfigurationData)' == ''">trace.h</WppScanConfigurationData>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <WppTraceFunction>
+      </WppTraceFunction>
+      <WarningLevel>Level4</WarningLevel>
+      <StructMemberAlignment>8Bytes</StructMemberAlignment>
+      <SmallerTypeCheck>true</SmallerTypeCheck>
+      <MultiProcessorCompilation>false</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <OptimizeReferences>false</OptimizeReferences>
+      <EnableCOMDATFolding>false</EnableCOMDATFolding>
     </Link>
     <Inf>
       <EnableVerbose>true</EnableVerbose>
-      <TimeStamp>2.1.14.7</TimeStamp>
+      <TimeStamp>2.1.14.8</TimeStamp>
     </Inf>
     <MessageCompile>
       <Verbose>true</Verbose>
+      <GenerateUserModeLoggingMacros>true</GenerateUserModeLoggingMacros>
+      <EnableCalloutMacro>true</EnableCalloutMacro>
     </MessageCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

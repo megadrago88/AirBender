@@ -173,7 +173,7 @@ Return Value:
     PAIRBENDER_GET_DS3_INPUT_REPORT     pGetDs3Input;
     PAIRBENDER_SET_DS3_OUTPUT_REPORT    pSetDs3Output;
     PAIRBENDER_GET_HOST_VERSION         pGetHostVersion;
-    PVOID                               buffer;
+//    PVOID                               buffer;
 
     TraceEvents(TRACE_LEVEL_VERBOSE,
         TRACE_QUEUE,
@@ -343,7 +343,7 @@ Return Value:
         #pragma endregion
 
         #pragma region IOCTL_AIRBENDER_SET_DS3_OUTPUT_REPORT
-
+            
         case IOCTL_AIRBENDER_SET_DS3_OUTPUT_REPORT:
 
             TraceEvents(TRACE_LEVEL_VERBOSE,
@@ -365,14 +365,14 @@ Return Value:
                     status = STATUS_DEVICE_DOES_NOT_EXIST;
                     break;
                 }
-
+                /*
                 buffer = WdfMemoryGetBuffer(pBthDevice->HidOutputReportMemory, &bufferLength);
 
-                RtlCopyMemory(buffer, pSetDs3Output->ReportBuffer, bufferLength);
+                RtlCopyMemory(buffer, pSetDs3Output->ReportBuffer, bufferLength);*/
             }
 
             break;
-
+            
         #pragma endregion
 
         #pragma region IOCTL_AIRBENDER_PORT_RESET
