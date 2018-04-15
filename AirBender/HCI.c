@@ -25,6 +25,8 @@ SOFTWARE.
 
 #include "Driver.h"
 
+//TODO: ADD MORE TRACING
+
 NTSTATUS
 HCI_Command(
     PDEVICE_CONTEXT Context,

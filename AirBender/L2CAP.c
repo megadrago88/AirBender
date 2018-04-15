@@ -26,6 +26,8 @@ SOFTWARE.
 #include "Driver.h"
 #include "L2CAP.h"
 
+//TODO: ADD MORE TRACING
+
 NTSTATUS
 L2CAP_Command(
     PDEVICE_CONTEXT Context,

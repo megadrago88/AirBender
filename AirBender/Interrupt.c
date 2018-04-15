@@ -43,6 +43,8 @@ SendControlRequest(
     WDF_MEMORY_DESCRIPTOR           memDesc;
     ULONG                           bytesTransferred;
 
+    //TODO: ADD MORE TRACING
+
     WDF_REQUEST_SEND_OPTIONS_INIT(
         &sendOptions,
         WDF_REQUEST_SEND_OPTION_TIMEOUT
@@ -84,6 +86,8 @@ SendControlRequest(
         TraceEvents(TRACE_LEVEL_ERROR, TRACE_INTERRUPT,
             "WdfUsbTargetDeviceSendControlTransferSynchronously: Failed - 0x%x (%d)\n", status, bytesTransferred);
     }
+
+    //TODO: ADD MORE TRACING
 
     return status;
 }
@@ -149,6 +153,8 @@ AirBenderEvtUsbInterruptPipeReadComplete(
     PAIRBENDER_GET_CLIENT_REMOVAL   pRemoval;
     size_t                          buflen;
     PBTH_DEVICE                     pClientDevice;
+
+    //TODO: ADD MORE TRACING
 
     UNREFERENCED_PARAMETER(Pipe);
 
@@ -661,6 +667,9 @@ AirBenderEvtUsbInterruptPipeReadComplete(
         default:
             break;
     }
+
+    //TODO: ADD MORE TRACING
+
 }
 
 BOOLEAN
@@ -671,6 +680,8 @@ AirBenderEvtUsbInterruptReadersFailed(
 ) {
     WDFDEVICE device = WdfIoTargetGetDevice(WdfUsbTargetPipeGetIoTarget(Pipe));
     PDEVICE_CONTEXT pDeviceContext = DeviceGetContext(device);
+
+    //TODO: ADD MORE TRACING
 
     UNREFERENCED_PARAMETER(UsbdStatus);
     UNREFERENCED_PARAMETER(Status);
@@ -685,6 +696,8 @@ AirBenderEvtUsbInterruptReadersFailed(
     // Service the pending interrupt switch change request
     //
     //OsrUsbIoctlGetInterruptMessage(device, Status);
+
+    //TODO: ADD MORE TRACING
 
     return TRUE;
 }

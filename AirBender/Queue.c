@@ -57,6 +57,7 @@ Return Value:
     WDFQUEUE queue;
     NTSTATUS status;
     WDF_IO_QUEUE_CONFIG    queueConfig;
+    //TODO: ADD MORE TRACING
 
     //
     // Configure a default queue so that requests that are not
@@ -67,9 +68,12 @@ Return Value:
         &queueConfig,
         WdfIoQueueDispatchParallel
     );
+    //TODO: ADD MORE TRACING
 
     queueConfig.EvtIoDeviceControl = AirBenderEvtIoDeviceControl;
     queueConfig.EvtIoStop = AirBenderEvtIoStop;
+
+    //TODO: ADD MORE TRACING
 
     status = WdfIoQueueCreate(
         Device,
@@ -83,6 +87,8 @@ Return Value:
         return status;
     }
 
+    //TODO: ADD MORE TRACING
+
     return status;
 }
 
@@ -92,11 +98,20 @@ NTSTATUS AirBenderChildQueuesInitialize(WDFDEVICE Device) {
     WDF_OBJECT_ATTRIBUTES   attributes;
     PDEVICE_CONTEXT         pDeviceContext;
 
+    //TODO: ADD MORE TRACING
+
     WDF_IO_QUEUE_CONFIG_INIT(&queueConfig, WdfIoQueueDispatchManual);
+    
+    //TODO: ADD MORE TRACING
+
     WDF_OBJECT_ATTRIBUTES_INIT(&attributes);
     attributes.ParentObject = Device;
+    
+    //TODO: ADD MORE TRACING
 
     pDeviceContext = DeviceGetContext(Device);
+
+    //TODO: ADD MORE TRACING
 
     status = WdfIoQueueCreate(
         Device,
@@ -111,6 +126,8 @@ NTSTATUS AirBenderChildQueuesInitialize(WDFDEVICE Device) {
             status);
         return status;
     }
+    
+    //TODO: ADD MORE TRACING
 
     status = WdfIoQueueCreate(
         Device,
@@ -126,6 +143,8 @@ NTSTATUS AirBenderChildQueuesInitialize(WDFDEVICE Device) {
         return status;
     }
 
+    //TODO: ADD MORE TRACING
+    
     return status;
 }
 
@@ -173,7 +192,11 @@ Return Value:
     PAIRBENDER_GET_DS3_INPUT_REPORT     pGetDs3Input;
     PAIRBENDER_SET_DS3_OUTPUT_REPORT    pSetDs3Output;
     PAIRBENDER_GET_HOST_VERSION         pGetHostVersion;
-//    PVOID                               buffer;
+    
+#ifdef ALLOWIO
+    PVOID                               buffer;
+#endif // ALLOWIO
+
 
     TraceEvents(TRACE_LEVEL_VERBOSE,
         TRACE_QUEUE,
@@ -181,6 +204,8 @@ Return Value:
         Queue, Request, (int) OutputBufferLength, (int) InputBufferLength, IoControlCode);
 
     pDeviceContext = DeviceGetContext(WdfIoQueueGetDevice(Queue));
+
+    //TODO: ADD MORE TRACING
 
     switch (IoControlCode) {
     #pragma region IOCTL_AIRBENDER_GET_HOST_BD_ADDR
@@ -335,6 +360,8 @@ Return Value:
                     break;
                 }
 
+                //TODO: ADD MORE TRACING
+
                 status = STATUS_PENDING;
             }
 
@@ -365,10 +392,13 @@ Return Value:
                     status = STATUS_DEVICE_DOES_NOT_EXIST;
                     break;
                 }
-                /*
+
+            #ifdef ALLOWIO
                 buffer = WdfMemoryGetBuffer(pBthDevice->HidOutputReportMemory, &bufferLength);
 
-                RtlCopyMemory(buffer, pSetDs3Output->ReportBuffer, bufferLength);*/
+                RtlCopyMemory(buffer, pSetDs3Output->ReportBuffer, bufferLength);
+            #endif // ALLOWIO
+
             }
 
             break;
