@@ -40,7 +40,11 @@ Ds3ConnectionRequest(
 
     PL2CAP_SIGNALLING_CONNECTION_REQUEST data = (PL2CAP_SIGNALLING_CONNECTION_REQUEST) &Buffer[8];
 
+#ifdef _VERB2INFO
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DS3, "%!FUNC! Entry");
+#else
     TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DS3, "%!FUNC! Entry");
+#endif // _VERB2INFO
 
     scid = data->SCID;
 
@@ -110,7 +114,11 @@ Ds3ConnectionRequest(
         "<< L2CAP_Configuration_Request SCID: %04X DCID: %04X",
         *(PUSHORT) &scid, *(PUSHORT) &dcid);
 
+#ifdef _VERB2INFO
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DS3, "%!FUNC! Exited with status %!STATUS!", status);
+#else
     TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DS3, "%!FUNC! Exited with status %!STATUS!", status);
+#endif // _VERB2INFO
 
     return status;
 }
@@ -127,7 +135,11 @@ Ds3ConnectionResponse(
 
     PL2CAP_SIGNALLING_CONNECTION_RESPONSE data = (PL2CAP_SIGNALLING_CONNECTION_RESPONSE) &Buffer[8];
 
+#ifdef _VERB2INFO
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DS3, "%!FUNC! Entry");
+#else
     TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DS3, "%!FUNC! Entry");
+#endif // _VERB2INFO
 
     scid = data->SCID;
     dcid = data->DCID;
@@ -191,7 +203,11 @@ Ds3ConnectionResponse(
             break;
     }
 
+#ifdef _VERB2INFO
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DS3, "%!FUNC! Exited with status %!STATUS!", status);
+#else
     TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DS3, "%!FUNC! Exited with status %!STATUS!", status);
+#endif // _VERB2INFO
 
     return status;
 }
@@ -208,7 +224,11 @@ NTSTATUS Ds3ConfigurationRequest(
 
     PL2CAP_SIGNALLING_CONFIGURATION_REQUEST data = (PL2CAP_SIGNALLING_CONFIGURATION_REQUEST) &Buffer[8];
 
+#ifdef _VERB2INFO
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DS3, "%!FUNC! Entry");
+#else
     TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DS3, "%!FUNC! Entry");
+#endif // _VERB2INFO
 
     dcid = data->DCID;
 
@@ -274,7 +294,11 @@ NTSTATUS Ds3ConfigurationRequest(
         }
     }
 
+#ifdef _VERB2INFO
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DS3, "%!FUNC! Exited with status %!STATUS!", status);
+#else
     TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DS3, "%!FUNC! Exited with status %!STATUS!", status);
+#endif // _VERB2INFO
 
     return status;
 }
@@ -291,7 +315,11 @@ Ds3ConfigurationResponse(
 
     PL2CAP_SIGNALLING_CONFIGURATION_RESPONSE data = (PL2CAP_SIGNALLING_CONFIGURATION_RESPONSE) &Buffer[8];
 
+#ifdef _VERB2INFO
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DS3, "%!FUNC! Entry");
+#else
     TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DS3, "%!FUNC! Entry");
+#endif // _VERB2INFO
 
     scid = data->SCID;
 
@@ -321,7 +349,11 @@ Ds3ConfigurationResponse(
             *(PUSHORT) &scid, *(PUSHORT) &dcid);
     }
 
+#ifdef _VERB2INFO
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DS3, "%!FUNC! Exited with status %!STATUS!", status);
+#else
     TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DS3, "%!FUNC! Exited with status %!STATUS!", status);
+#endif // _VERB2INFO
 
     return status;
 }
@@ -338,7 +370,11 @@ Ds3DisconnectionRequest(
 
     PL2CAP_SIGNALLING_DISCONNECTION_REQUEST data = (PL2CAP_SIGNALLING_DISCONNECTION_REQUEST) &Buffer[8];
 
+#ifdef _VERB2INFO
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DS3, "%!FUNC! Entry");
+#else
     TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DS3, "%!FUNC! Entry");
+#endif // _VERB2INFO
 
     scid = data->SCID;
     dcid = data->DCID;
@@ -385,7 +421,11 @@ Ds3DisconnectionRequest(
         "<< L2CAP_Disconnection_Response SCID: %04X DCID: %04X",
         *(PUSHORT) &scid, *(PUSHORT) &dcid);
 
+#ifdef _VERB2INFO
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DS3, "%!FUNC! Exited with status %!STATUS!", status);
+#else
     TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DS3, "%!FUNC! Exited with status %!STATUS!", status);
+#endif // _VERB2INFO
 
     return status;
 }
@@ -410,7 +450,11 @@ Ds3DisconnectionResponse(
     };
     PVOID           memBuffer;
 
+#ifdef _VERB2INFO
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DS3, "%!FUNC! Entry");
+#else
     TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DS3, "%!FUNC! Entry");
+#endif // _VERB2INFO
 
     TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DS3,
         ">> L2CAP_Disconnection_Response");
@@ -473,7 +517,11 @@ Ds3DisconnectionResponse(
         WdfTimerStart(Device->HidOutputReportTimer, WDF_REL_TIMEOUT_IN_MS(10));
     }
 
+#ifdef _VERB2INFO
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DS3, "%!FUNC! Exited with status %!STATUS!", status);
+#else
     TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DS3, "%!FUNC! Exited with status %!STATUS!", status);
+#endif // _VERB2INFO
 
     return status;
 }
@@ -492,7 +540,11 @@ Ds3InitHidReportStage(
     PAIRBENDER_GET_CLIENT_ARRIVAL   pArrival;
     size_t                          buflen;
 
+#ifdef _VERB2INFO
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DS3, "%!FUNC! Entry");
+#else
     TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DS3, "%!FUNC! Entry");
+#endif // _VERB2INFO
 
     if (Device->InitHidStage<DS3_INIT_HID_STAGE_MAX) {
         L2CAP_DEVICE_GET_SCID_FOR_TYPE(
@@ -563,7 +615,11 @@ Ds3InitHidReportStage(
         }
     }
 
+#ifdef _VERB2INFO
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DS3, "%!FUNC! Exited with status %!STATUS!", status);
+#else
     TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DS3, "%!FUNC! Exited with status %!STATUS!", status);
+#endif // _VERB2INFO
 
     return status;
 }
@@ -577,7 +633,11 @@ Ds3ProcessHidInputReport(
     PAIRBENDER_GET_DS3_INPUT_REPORT pGetDs3Input;
     size_t bufferLength;
 
+#ifdef _VERB2INFO
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DS3, "%!FUNC! Entry");
+#else
     TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DS3, "%!FUNC! Entry");
+#endif // _VERB2INFO
 
     status = WdfIoQueueRetrieveNextRequest(Device->HidInputReportQueue, &Request);
 
@@ -604,7 +664,11 @@ Ds3ProcessHidInputReport(
         WdfRequestCompleteWithInformation(Request, status, bufferLength);
     }
 
+#ifdef _VERB2INFO
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DS3, "%!FUNC! Exited with status %!STATUS!", status);
+#else
     TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DS3, "%!FUNC! Exited with status %!STATUS!", status);
+#endif // _VERB2INFO
 
     return status;
 }

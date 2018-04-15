@@ -15,12 +15,17 @@ AirBenderBulkWriteEvtTimerFunc(
     PVOID                   buffer;
     size_t                  bufferLength;
 
+#ifdef _VERB2INFO
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_BLUETOOTH, "%!FUNC! Entry");
+#else
     TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_BLUETOOTH, "%!FUNC! Entry");
+#endif // _VERB2INFO
 
     pBluetoothCtx = BluetoothDeviceGetContext(Timer);
     pDeviceContext = DeviceGetContext(pBluetoothCtx->HostDevice);
     pBthDevice = pBluetoothCtx->Device;
 
+#ifdef _VERB2INFO
     TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_BLUETOOTH,
         "%!FUNC! ClientAddress: %02X:%02X:%02X:%02X:%02X:%02X",
         pBluetoothCtx->Device->ClientAddress.Address[0],
@@ -29,6 +34,16 @@ AirBenderBulkWriteEvtTimerFunc(
         pBluetoothCtx->Device->ClientAddress.Address[3],
         pBluetoothCtx->Device->ClientAddress.Address[4],
         pBluetoothCtx->Device->ClientAddress.Address[5]);
+#else
+    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_BLUETOOTH,
+        "%!FUNC! ClientAddress: %02X:%02X:%02X:%02X:%02X:%02X",
+        pBluetoothCtx->Device->ClientAddress.Address[0],
+        pBluetoothCtx->Device->ClientAddress.Address[1],
+        pBluetoothCtx->Device->ClientAddress.Address[2],
+        pBluetoothCtx->Device->ClientAddress.Address[3],
+        pBluetoothCtx->Device->ClientAddress.Address[4],
+        pBluetoothCtx->Device->ClientAddress.Address[5]);
+#endif // _VERB2INFO
 
     buffer = WdfMemoryGetBuffer(pBthDevice->HidOutputReportMemory, &bufferLength);
 
@@ -50,5 +65,10 @@ AirBenderBulkWriteEvtTimerFunc(
             "HID_Command failed with status %!STATUS!", status);
     }
 
+#ifdef _VERB2INFO
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_BLUETOOTH, "%!FUNC! Exited with status %!STATUS!", status);
+#else
     TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_BLUETOOTH, "%!FUNC! Exited with status %!STATUS!", status);
+#endif // _VERB2INFO
+
 }

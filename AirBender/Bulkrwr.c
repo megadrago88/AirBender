@@ -154,7 +154,11 @@ AirBenderEvtUsbBulkReadPipeReadComplete(
     PBTH_DEVICE                     pClientDevice;
     L2CAP_SIGNALLING_COMMAND_CODE   code;
 
+#ifdef _VERB2INFO
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_BULKRWR, "%!FUNC! Entry");
+#else
     TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_BULKRWR, "%!FUNC! Entry");
+#endif // _VERB2INFO
 
     static BYTE CID = 0x01;
 
@@ -295,7 +299,11 @@ AirBenderEvtUsbBulkReadPipeReadComplete(
             &CID);
     }
 
+#ifdef _VERB2INFO
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_BULKRWR, "%!FUNC! Exited");
+#else
     TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_BULKRWR, "%!FUNC! Exited");
+#endif // _VERB2INFO
 
 }
 
@@ -310,11 +318,19 @@ AirBenderEvtUsbBulkReadReadersFailed(
 
     UNREFERENCED_PARAMETER(pDeviceContext);
 
+#ifdef _VERB2INFO
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_BULKRWR, "%!FUNC! Entry");
+#else
     TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_BULKRWR, "%!FUNC! Entry");
+#endif // _VERB2INFO
 
     TraceEvents(TRACE_LEVEL_ERROR, TRACE_BULKRWR, "Status: 0x%X, USBD_STATUS: 0x%X", Status, UsbdStatus);
 
+#ifdef _VERB2INFO
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_BULKRWR, "%!FUNC! Exited");
+#else
     TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_BULKRWR, "%!FUNC! Exited");
+#endif // _VERB2INFO
 
     return TRUE;
 }

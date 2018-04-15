@@ -67,7 +67,11 @@ Return Value:
     //
     WPP_INIT_TRACING(DriverObject, RegistryPath);
 
+#ifdef _VERB2INFO
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DRIVER, "%!FUNC! Entry");
+#else
     TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DRIVER, "%!FUNC! Entry");
+#endif // _VERB2INFO
 
     //
     // Register a cleanup callback so that we can call WPP_CLEANUP when
@@ -93,7 +97,11 @@ Return Value:
         return status;
     }
 
+#ifdef _VERB2INFO
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DRIVER, "%!FUNC! Exited with status %!STATUS!", status);
+#else
     TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DRIVER, "%!FUNC! Exited with status %!STATUS!", status);
+#endif // _VERB2INFO
 
     return status;
 }
@@ -126,11 +134,19 @@ Return Value:
 
     UNREFERENCED_PARAMETER(Driver);
 
+#ifdef _VERB2INFO
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DRIVER, "%!FUNC! Entry");
+#else
     TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DRIVER, "%!FUNC! Entry");
+#endif // _VERB2INFO
 
     status = AirBenderCreateDevice(DeviceInit);
 
+#ifdef _VERB2INFO
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DRIVER, "%!FUNC! Exited with status %!STATUS!", status);
+#else
     TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DRIVER, "%!FUNC! Exited with status %!STATUS!", status);
+#endif // _VERB2INFO
 
     return status;
 }
@@ -156,7 +172,11 @@ Return Value:
 {
     UNREFERENCED_PARAMETER(DriverObject);
 
+#ifdef _VERB2INFO
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DRIVER, "%!FUNC! Entry");
+#else
     TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DRIVER, "%!FUNC! Entry");
+#endif // _VERB2INFO
 
     //
     // Stop WPP Tracing

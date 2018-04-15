@@ -151,7 +151,11 @@ Return Value:
     UNREFERENCED_PARAMETER(ResourceList);
     UNREFERENCED_PARAMETER(ResourceListTranslated);
 
+#ifdef _VERB2INFO
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DRIVER, "%!FUNC! Entry");
+#else
     TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DRIVER, "%!FUNC! Entry");
+#endif // _VERB2INFO
 
     status = STATUS_SUCCESS;
     pDeviceContext = DeviceGetContext(Device);
@@ -270,7 +274,11 @@ Return Value:
     AirBenderConfigContReaderForInterruptEndPoint(Device);
     AirBenderConfigContReaderForBulkReadEndPoint(pDeviceContext);
 
+#ifdef _VERB2INFO
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DRIVER, "%!FUNC! Exit");
+#else
     TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DRIVER, "%!FUNC! Exit");
+#endif // _VERB2INFO
 
     return status;
 }
@@ -288,7 +296,11 @@ AirBenderEvtDeviceD0Entry(
     pDeviceContext = DeviceGetContext(Device);
     isTargetStarted = FALSE;
 
+#ifdef _VERB2INFO
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DRIVER, "%!FUNC! Entry");
+#else
     TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DRIVER, "%!FUNC! Entry");
+#endif // _VERB2INFO
 
     UNREFERENCED_PARAMETER(PreviousState);
 
@@ -338,7 +350,11 @@ End:
 
     HCI_Command_Reset(pDeviceContext);
 
+#ifdef _VERB2INFO
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DRIVER, "%!FUNC! Exited with status %!STATUS!", status);
+#else
     TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DRIVER, "%!FUNC! Exited with status %!STATUS!", status);
+#endif // _VERB2INFO
 
     return status;
 }
@@ -352,9 +368,17 @@ AirBenderEvtDeviceD0Exit(
     UNREFERENCED_PARAMETER(Device);
     UNREFERENCED_PARAMETER(TargetState);
 
+#ifdef _VERB2INFO
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DRIVER, "%!FUNC! Entry");
+#else
     TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DRIVER, "%!FUNC! Entry");
+#endif // _VERB2INFO
 
+#ifdef _VERB2INFO
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DRIVER, "%!FUNC! Exited");
+#else
     TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DRIVER, "%!FUNC! Exited");
+#endif // _VERB2INFO
 
     return STATUS_SUCCESS;
 }
