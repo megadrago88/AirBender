@@ -227,6 +227,9 @@
       <StructMemberAlignment>8Bytes</StructMemberAlignment>
       <SmallerTypeCheck>true</SmallerTypeCheck>
       <MultiProcessorCompilation>false</MultiProcessorCompilation>
+      <PreprocessorDefinitions>_VERB2INFO;_WIN64;_AMD64_;AMD64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WppPreprocessorDefinitions>
+      </WppPreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -242,6 +245,9 @@
       <GenerateUserModeLoggingMacros>true</GenerateUserModeLoggingMacros>
       <EnableCalloutMacro>true</EnableCalloutMacro>
     </MessageCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_WIN64;_AMD64_=1;AMD64;%(PreprocessorDefinitions);</PreprocessorDefinitions>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
