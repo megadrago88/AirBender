@@ -59,6 +59,12 @@ Return Value:
     WDF_IO_QUEUE_CONFIG    queueConfig;
     //TODO: ADD MORE TRACING
 
+#ifdef _VERB2INFO
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_QUEUE, "%!FUNC! Entry with Param WDFDEVICE: %s", Device);
+#else
+    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_QUEUE, "%!FUNC! Entry with Param WDFDEVICE: %s", Device);
+#endif // _VERB2INFO
+
     //
     // Configure a default queue so that requests that are not
     // configure-fowarded using WdfDeviceConfigureRequestDispatching to goto
@@ -98,15 +104,21 @@ NTSTATUS AirBenderChildQueuesInitialize(WDFDEVICE Device) {
     WDF_OBJECT_ATTRIBUTES   attributes;
     PDEVICE_CONTEXT         pDeviceContext;
 
+#ifdef _VERB2INFO
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_QUEUE, "%!FUNC! Entry with Param WDFDEVICE: %s", Device);
+#else
+    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_QUEUE, "%!FUNC! Entry with Param WDFDEVICE: %s", Device);
+#endif // _VERB2INFO
+
     //TODO: ADD MORE TRACING
 
     WDF_IO_QUEUE_CONFIG_INIT(&queueConfig, WdfIoQueueDispatchManual);
-    
+
     //TODO: ADD MORE TRACING
 
     WDF_OBJECT_ATTRIBUTES_INIT(&attributes);
     attributes.ParentObject = Device;
-    
+
     //TODO: ADD MORE TRACING
 
     pDeviceContext = DeviceGetContext(Device);
@@ -126,7 +138,7 @@ NTSTATUS AirBenderChildQueuesInitialize(WDFDEVICE Device) {
             status);
         return status;
     }
-    
+
     //TODO: ADD MORE TRACING
 
     status = WdfIoQueueCreate(
@@ -144,7 +156,7 @@ NTSTATUS AirBenderChildQueuesInitialize(WDFDEVICE Device) {
     }
 
     //TODO: ADD MORE TRACING
-    
+
     return status;
 }
 
@@ -192,11 +204,16 @@ Return Value:
     PAIRBENDER_GET_DS3_INPUT_REPORT     pGetDs3Input;
     PAIRBENDER_SET_DS3_OUTPUT_REPORT    pSetDs3Output;
     PAIRBENDER_GET_HOST_VERSION         pGetHostVersion;
-    
+
 #ifdef ALLOWIO
     PVOID                               buffer;
 #endif // ALLOWIO
-
+    
+#ifdef _VERB2INFO
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_QUEUE, "%!FUNC! Entry with Params WDFQUEUE: %s %size_t", Queue);
+#else
+    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_QUEUE, "%!FUNC! Entry with Params WDFQUEUE: %s ", Queue);
+#endif // _VERB2INFO
 
     TraceEvents(TRACE_LEVEL_VERBOSE,
         TRACE_QUEUE,
@@ -370,7 +387,7 @@ Return Value:
         #pragma endregion
 
         #pragma region IOCTL_AIRBENDER_SET_DS3_OUTPUT_REPORT
-            
+
         case IOCTL_AIRBENDER_SET_DS3_OUTPUT_REPORT:
 
             TraceEvents(TRACE_LEVEL_VERBOSE,
@@ -402,7 +419,7 @@ Return Value:
             }
 
             break;
-            
+
         #pragma endregion
 
         #pragma region IOCTL_AIRBENDER_PORT_RESET
