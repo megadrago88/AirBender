@@ -37,7 +37,11 @@ AirBenderConfigContReaderForBulkReadEndPoint(
     WDF_USB_CONTINUOUS_READER_CONFIG contReaderConfig;
     NTSTATUS status;
 
-    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_BULKRWR, "%!FUNC! Entry");
+#ifdef _VERB2INFO
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_BULKRWR, "%!FUNC! Entry with Param PDEVICE_CONTEXT: TODO");
+#else
+    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_BULKRWR, "%!FUNC! Entry with Param PDEVICE_CONTEXT: TODO");
+#endif // _VERB2INFO
 
     WDF_USB_CONTINUOUS_READER_CONFIG_INIT(&contReaderConfig,
         AirBenderEvtUsbBulkReadPipeReadComplete,
@@ -63,7 +67,11 @@ AirBenderConfigContReaderForBulkReadEndPoint(
         return status;
     }
 
+#ifdef _VERB2INFO
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_BULKRWR, "%!FUNC! Exited with status %!STATUS!", status);
+#else
     TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_BULKRWR, "%!FUNC! Exited with status %!STATUS!", status);
+#endif // _VERB2INFO
 
     return status;
 }
@@ -76,7 +84,13 @@ NTSTATUS WriteBulkPipe(
     NTSTATUS                        status;
     WDF_MEMORY_DESCRIPTOR           memDesc;
 
-    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_BULKRWR, "%!FUNC! Entry");
+#ifdef _VERB2INFO
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_BULKRWR, "%!FUNC! Entry with Params PDEVICE_CONTEXT: TODO PVOID: %p ULONG: %lu PULONG: %plu",
+        Buffer, BufferLength, BytesWritten);
+#else
+    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_BULKRWR, "%!FUNC! Entry with Params PDEVICE_CONTEXT: TODO PVOID: %p ULONG: %lu PULONG: %plu",
+        Buffer, BufferLength, BytesWritten);
+#endif // _VERB2INFO
 
     WDF_MEMORY_DESCRIPTOR_INIT_BUFFER(
         &memDesc,
@@ -92,7 +106,11 @@ NTSTATUS WriteBulkPipe(
         BytesWritten
     );
 
+#ifdef _VERB2INFO
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_BULKRWR, "%!FUNC! Exited with status %!STATUS!", status);
+#else
     TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_BULKRWR, "%!FUNC! Exited with status %!STATUS!", status);
+#endif // _VERB2INFO
 
     return status;
 }
@@ -108,7 +126,13 @@ HID_Command(
     NTSTATUS status;
     PUCHAR buffer;
 
-    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_BULKRWR, "%!FUNC! Entry");
+#ifdef _VERB2INFO
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_BULKRWR, "%!FUNC! Entry with Params PDEVICE_CONTEXT: TODO BTH_HANDLE: %hu %hu L2CAP_CID: %hu %hu "
+        "PVOID: %p ULONG: %lu/n", Handle.Lsb, Handle.Msb, Channel.Lsb, Channel.Msb, Buffer, BufferLength);
+#else
+    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_BULKRWR, "%!FUNC! Entry with Params PDEVICE_CONTEXT: TODO BTH_HANDLE: %hu %hu L2CAP_CID: %hu %hu "
+        "PVOID: %p ULONG: %lu/n", Handle.Lsb, Handle.Msb, Channel.Lsb, Channel.Msb, Buffer, BufferLength);
+#endif // _VERB2INFO
 
 #ifndef _KERNEL_MODE
     buffer = malloc(BufferLength+8);
@@ -135,7 +159,11 @@ HID_Command(
     // TODO: implement
 #endif
 
+#ifdef _VERB2INFO
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_BULKRWR, "%!FUNC! Exited with status %!STATUS!", status);
+#else
     TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_BULKRWR, "%!FUNC! Exited with status %!STATUS!", status);
+#endif // _VERB2INFO
 
     return status;
 }
@@ -155,9 +183,11 @@ AirBenderEvtUsbBulkReadPipeReadComplete(
     L2CAP_SIGNALLING_COMMAND_CODE   code;
 
 #ifdef _VERB2INFO
-    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_BULKRWR, "%!FUNC! Entry");
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_BULKRWR, "%!FUNC! Entry with Params WDFUSBPIPE: %p WDFMEMORY: %p size_t: %I64u WDFCONTEXT: %s",
+        Pipe, Buffer, NumBytesTransferred, Context);
 #else
-    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_BULKRWR, "%!FUNC! Entry");
+    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_BULKRWR, "%!FUNC! Entry with Params WDFUSBPIPE: %p WDFMEMORY: %p size_t: %I64u WDFCONTEXT: %s",
+        Pipe, Buffer, NumBytesTransferred, Context);
 #endif // _VERB2INFO
 
     static BYTE CID = 0x01;
@@ -319,9 +349,11 @@ AirBenderEvtUsbBulkReadReadersFailed(
     UNREFERENCED_PARAMETER(pDeviceContext);
 
 #ifdef _VERB2INFO
-    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_BULKRWR, "%!FUNC! Entry");
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_BULKRWR, "%!FUNC! Entry with Params WDFUSBPIPE: %p NTSTATUS: %!STATUS! USBD_STATUS: %X",
+        Pipe, Status, UsbdStatus);
 #else
-    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_BULKRWR, "%!FUNC! Entry");
+    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_BULKRWR, "%!FUNC! Entry with Params WDFUSBPIPE: %p NTSTATUS: %!STATUS! USBD_STATUS: %X",
+        Pipe, Status, UsbdStatus);
 #endif // _VERB2INFO
 
     TraceEvents(TRACE_LEVEL_ERROR, TRACE_BULKRWR, "Status: 0x%X, USBD_STATUS: 0x%X", Status, UsbdStatus);

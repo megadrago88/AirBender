@@ -57,6 +57,12 @@ Return Value:
     NTSTATUS status;
     WDF_DEVICE_PNP_CAPABILITIES pnpCapabilities;
 
+#ifdef _VERB2INFO
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DEVICE, "%!FUNC! Entry with Param PWDFDEVICE_INIT: %p", DeviceInit);
+#else
+    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DEVICE, "%!FUNC! Entry with Param PWDFDEVICE_INIT: %p", DeviceInit);
+#endif // _VERB2INFO
+
     WDF_PNPPOWER_EVENT_CALLBACKS_INIT(&pnpPowerCallbacks);
     pnpPowerCallbacks.EvtDevicePrepareHardware = AirBenderEvtDevicePrepareHardware;
     pnpPowerCallbacks.EvtDeviceD0Entry = AirBenderEvtDeviceD0Entry;
@@ -152,9 +158,9 @@ Return Value:
     UNREFERENCED_PARAMETER(ResourceListTranslated);
 
 #ifdef _VERB2INFO
-    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DRIVER, "%!FUNC! Entry");
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DEVICE, "%!FUNC! Entry");
 #else
-    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DRIVER, "%!FUNC! Entry");
+    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DEVICE, "%!FUNC! Entry");
 #endif // _VERB2INFO
 
     status = STATUS_SUCCESS;
@@ -275,9 +281,9 @@ Return Value:
     AirBenderConfigContReaderForBulkReadEndPoint(pDeviceContext);
 
 #ifdef _VERB2INFO
-    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DRIVER, "%!FUNC! Exit");
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DEVICE, "%!FUNC! Exit");
 #else
-    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DRIVER, "%!FUNC! Exit");
+    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DEVICE, "%!FUNC! Exit");
 #endif // _VERB2INFO
 
     return status;
@@ -297,9 +303,9 @@ AirBenderEvtDeviceD0Entry(
     isTargetStarted = FALSE;
 
 #ifdef _VERB2INFO
-    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DRIVER, "%!FUNC! Entry");
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DEVICE, "%!FUNC! Entry");
 #else
-    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DRIVER, "%!FUNC! Entry");
+    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DEVICE, "%!FUNC! Entry");
 #endif // _VERB2INFO
 
     UNREFERENCED_PARAMETER(PreviousState);
@@ -351,9 +357,9 @@ End:
     HCI_Command_Reset(pDeviceContext);
 
 #ifdef _VERB2INFO
-    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DRIVER, "%!FUNC! Exited with status %!STATUS!", status);
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DEVICE, "%!FUNC! Exited with status %!STATUS!", status);
 #else
-    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DRIVER, "%!FUNC! Exited with status %!STATUS!", status);
+    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DEVICE, "%!FUNC! Exited with status %!STATUS!", status);
 #endif // _VERB2INFO
 
     return status;
@@ -369,15 +375,15 @@ AirBenderEvtDeviceD0Exit(
     UNREFERENCED_PARAMETER(TargetState);
 
 #ifdef _VERB2INFO
-    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DRIVER, "%!FUNC! Entry");
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DEVICE, "%!FUNC! Entry");
 #else
-    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DRIVER, "%!FUNC! Entry");
+    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DEVICE, "%!FUNC! Entry");
 #endif // _VERB2INFO
 
 #ifdef _VERB2INFO
-    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DRIVER, "%!FUNC! Exited");
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DEVICE, "%!FUNC! Exited");
 #else
-    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DRIVER, "%!FUNC! Exited");
+    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_DEVICE, "%!FUNC! Exited");
 #endif // _VERB2INFO
 
     return STATUS_SUCCESS;

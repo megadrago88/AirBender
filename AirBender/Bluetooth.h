@@ -27,12 +27,12 @@ SOFTWARE.
 
 #include <stdlib.h>
 
-#define BD_LINK_LENGTH  0x10
+#define BD_LINK_LENGTH  0x10 // 16
 #define DS3_OUTPUT_REPORT_TIMER_PERIOD     10 // ms
 
 EVT_WDF_TIMER AirBenderBulkWriteEvtTimerFunc;
 
-
+//TODO: Figure out why this is here
 static const BYTE BD_LINK[BD_LINK_LENGTH] =
 {
     0x56, 0xE8, 0x81, 0x38, 0x08, 0x06, 0x51, 0x41,
@@ -128,7 +128,7 @@ typedef struct _BTH_DEVICE {
     WDFQUEUE HidInputReportQueue;
 
     //
-    // Framework memory holding output repor
+    // Framework memory holding output report
     // 
     WDFMEMORY HidOutputReportMemory;
 

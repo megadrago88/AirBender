@@ -49,7 +49,7 @@ AirBenderBulkWriteEvtTimerFunc(
     pDeviceContext = DeviceGetContext(pBluetoothCtx->HostDevice);
     pBthDevice = pBluetoothCtx->Device;
 
-#ifdef _VERB2INFO
+#ifndef _VERB2INFO //changed to ifndef from ifdef
     TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_BLUETOOTH,
         "%!FUNC! ClientAddress: %02X:%02X:%02X:%02X:%02X:%02X",
         pBluetoothCtx->Device->ClientAddress.Address[0],

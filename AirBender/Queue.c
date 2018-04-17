@@ -60,9 +60,9 @@ Return Value:
     //TODO: ADD MORE TRACING
 
 #ifdef _VERB2INFO
-    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_QUEUE, "%!FUNC! Entry with Param WDFDEVICE: %s", Device);
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_QUEUE, "%!FUNC! Entry with Param WDFDEVICE: %p", Device);
 #else
-    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_QUEUE, "%!FUNC! Entry with Param WDFDEVICE: %s", Device);
+    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_QUEUE, "%!FUNC! Entry with Param WDFDEVICE: %p", Device);
 #endif // _VERB2INFO
 
     //
@@ -105,9 +105,9 @@ NTSTATUS AirBenderChildQueuesInitialize(WDFDEVICE Device) {
     PDEVICE_CONTEXT         pDeviceContext;
 
 #ifdef _VERB2INFO
-    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_QUEUE, "%!FUNC! Entry with Param WDFDEVICE: %s", Device);
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_QUEUE, "%!FUNC! Entry with Param WDFDEVICE: %p", Device);
 #else
-    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_QUEUE, "%!FUNC! Entry with Param WDFDEVICE: %s", Device);
+    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_QUEUE, "%!FUNC! Entry with Param WDFDEVICE: %p", Device);
 #endif // _VERB2INFO
 
     //TODO: ADD MORE TRACING
@@ -210,9 +210,9 @@ Return Value:
 #endif // ALLOWIO
     
 #ifdef _VERB2INFO
-    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_QUEUE, "%!FUNC! Entry with Params WDFQUEUE: %s %size_t", Queue);
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_QUEUE, "%!FUNC! Entry with Params WDFQUEUE: %p ", Queue);
 #else
-    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_QUEUE, "%!FUNC! Entry with Params WDFQUEUE: %s ", Queue);
+    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_QUEUE, "%!FUNC! Entry with Params WDFQUEUE: %p ", Queue);
 #endif // _VERB2INFO
 
     TraceEvents(TRACE_LEVEL_VERBOSE,
