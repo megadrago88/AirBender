@@ -85,10 +85,10 @@ NTSTATUS WriteBulkPipe(
     WDF_MEMORY_DESCRIPTOR           memDesc;
 
 #ifdef _VERB2INFO
-    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_BULKRWR, "%!FUNC! Entry with Params PDEVICE_CONTEXT: TODO PVOID: %p ULONG: %lu PULONG: %plu",
+    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_BULKRWR, "%!FUNC! Entry with Params PDEVICE_CONTEXT: TODO PVOID: %p ULONG: %lu PULONG: %p",
         Buffer, BufferLength, BytesWritten);
 #else
-    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_BULKRWR, "%!FUNC! Entry with Params PDEVICE_CONTEXT: TODO PVOID: %p ULONG: %lu PULONG: %plu",
+    TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_BULKRWR, "%!FUNC! Entry with Params PDEVICE_CONTEXT: TODO PVOID: %p ULONG: %lu PULONG: %p",
         Buffer, BufferLength, BytesWritten);
 #endif // _VERB2INFO
 
@@ -128,10 +128,10 @@ HID_Command(
 
 #ifdef _VERB2INFO
     TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_BULKRWR, "%!FUNC! Entry with Params PDEVICE_CONTEXT: TODO BTH_HANDLE: %hu %hu L2CAP_CID: %hu %hu "
-        "PVOID: %p ULONG: %lu/n", Handle.Lsb, Handle.Msb, Channel.Lsb, Channel.Msb, Buffer, BufferLength);
+        "PVOID: %p ULONG: %lu", Handle.Lsb, Handle.Msb, Channel.Lsb, Channel.Msb, Buffer, BufferLength);
 #else
     TraceEvents(TRACE_LEVEL_VERBOSE, TRACE_BULKRWR, "%!FUNC! Entry with Params PDEVICE_CONTEXT: TODO BTH_HANDLE: %hu %hu L2CAP_CID: %hu %hu "
-        "PVOID: %p ULONG: %lu/n", Handle.Lsb, Handle.Msb, Channel.Lsb, Channel.Msb, Buffer, BufferLength);
+        "PVOID: %p ULONG: %lu", Handle.Lsb, Handle.Msb, Channel.Lsb, Channel.Msb, Buffer, BufferLength);
 #endif // _VERB2INFO
 
 #ifndef _KERNEL_MODE
@@ -197,7 +197,7 @@ AirBenderEvtUsbBulkReadPipeReadComplete(
     if (NumBytesTransferred==0) {
         TraceEvents(TRACE_LEVEL_WARNING, TRACE_BULKRWR,
             "!FUNC! Zero length read "
-            "occurred on the Interrupt Pipe's Continuous Reader\n"
+            "occurred on the Interrupt Pipe's Continuous Reader"
         );
         return;
     }

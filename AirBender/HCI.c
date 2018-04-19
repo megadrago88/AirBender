@@ -419,7 +419,13 @@ HCI_Command_Disconnect(
     BYTE buffer[6];
 
     buffer[3] = Handle.Lsb;
+
+#ifdef HCIDCCAST
+    buffer[4] = (BYTE) (Handle.Msb^0x20);
+#else
     buffer[4] = Handle.Msb^0x20;
+#endif // HCIDCCAST
+
     buffer[5] = 0x13;
 
     return HCI_Command(Context, HCI_Disconnect, buffer, 6);
